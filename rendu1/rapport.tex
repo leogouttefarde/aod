@@ -1,0 +1,134 @@
+\documentclass[a4paper, 10pt, french]{article}
+% Préambule; packages qui peuvent être utiles
+   \RequirePackage[T1]{fontenc}        % Ce package pourrit les pdf...
+   \RequirePackage{babel,indentfirst}  % Pour les césures correctes,
+                                       % et pour indenter au début de chaque paragraphe
+   \RequirePackage[utf8]{inputenc}   % Pour pouvoir utiliser directement les accents
+                                     % et autres caractères français
+   \RequirePackage{lmodern,tgpagella} % Police de caractères
+   \textwidth 17cm \textheight 25cm \oddsidemargin -0.24cm % Définition taille de la page
+   \evensidemargin -1.24cm \topskip 0cm \headheight -1.5cm % Définition des marges
+   \RequirePackage{latexsym}                  % Symboles
+   \RequirePackage{amsmath}                   % Symboles mathématiques
+   \RequirePackage{tikz}   % Pour faire des schémas
+   \RequirePackage{graphicx} % Pour inclure des images
+   \RequirePackage{listings} % pour mettre des listings
+% Fin Préambule; package qui peuvent être utiles
+
+\title{Rapport de TP 4MMAOD : Génération de patch optimal\\
+``{\em Question 1 : Modélisation par PLNE}'' }
+\author{
+GOUTTEFARDE Léo (groupe 5)
+\\ PIELLARD Jérémie (groupe 2)
+}
+
+\begin{document}
+
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Modélisation du problème restreint sous forme de PLNE}
+
+\subsection*{Données}
+\noindent On cherche à créer un patch $P$ restreint minimal qui transforme un fichier $F_1$ de $n$ lignes en un fichier $F_2$ de $m$ lignes.
+
+\noindent Pour toute ligne $i$ de $F_1$, notée $F_1(i)$, on a donc $i \in 1 \cdots n$.
+
+\noindent De même pour toute ligne $j$ de $F_2$, notée $F_2(j)$, on a donc $j \in 1 \cdots m$.
+
+\noindent Finalement, on définit $L(F_2(j))$ comme le nombre de caractères de la ligne $F_2(j)$ (incluant le caractère de fin de ligne).
+
+\subsection*{Variables}
+On introduit les variables de coût suivantes :
+\\
+
+\begin{itemize}
+\item[$\bullet$]
+$c_s(i, j)$ : modélise le coût de substitution de la ligne $F_1(i)$ par la ligne $F_2(j)$
+\\
+\item[$\bullet$]
+$c_a(i, j) = 10 + L(F_2(j))$ : modélise le coût d'ajout de la ligne $F_2(j)$ après la ligne $F_1(i)$ 
+\\
+\item[$\bullet$]
+$c_d(i) = 10$ : modélise le coût de destruction de la ligne $F_1(i)$ (identique pour tout $i$, peu utile donc)
+\end{itemize}
+$\newline$
+\\
+\indent On introduit les variables binaires (de valeur 1 ou 0) suivantes :
+\\
+
+\begin{itemize}
+\item[$\bullet$]
+$s(i, j)$ : modélise la substitution (ou non) de la ligne $F_1(i)$ par la ligne $F_2(j)$
+\\
+\item[$\bullet$]
+$d(i)$ : modélise la destruction (ou non) de la ligne $F_1(i)$
+\\
+\item[$\bullet$]
+$a(i, j)$ : modélise l'ajout (ou non) de la ligne $F_2(j)$ après la ligne $F_1(i)$
+\end{itemize}
+
+% \begin{equation}
+% c_s(i, j) = 10 + L(F_2(j))
+% \end{equation}
+\subsection*{Contraintes}
+% \paragraph{Justification\,: }
+% {
+%   loltest
+% }
+Les contraintes de coût suivantes sont à considérer pour $c_s$ :
+\\
+\begin{itemize}
+\item[$\bullet$]
+$c_s(i, j) = 0$ si $F_1(i) = F_2(j)$ : le coût de copie des lignes laissées telles quelles est nul
+\\
+\item[$\bullet$]
+$c_s(i, j) = 10 + L(F_2(j))$ si $F_1(i) \ne F_2(j)$ : coût des substitutions classiques
+\end{itemize}
+$\newline$
+\\
+\indent Pour l'ajout et la destruction, on peut d'abord distinguer plusieurs cas :
+
+\subsubsection*{Cas 1 : Nombre minimal de destructions $(n > m)$}
+
+Si $n > m$, on aura minimum $n-m$ destructions à effectuer, soit un coût minimal de $10 \, (n - m)$.
+
+
+\subsubsection*{Cas 2 : Nombre minimal d'ajouts $(n < m)$}
+
+Si $n < m$, on aura minimum $m - n$ ajouts à effectuer, soit un coût minimal de
+
+$10 \, (m - n) + \sum\limits_{j=0}^m a(j) \cdot L(F_2(j))$.
+
+
+\subsubsection*{Cas 3 : Même nombre de lignes dans chaque fichier $(n = m)$}
+
+Si $n = m$, il n'y a pas forcément d'ajout ni de destruction de ligne.
+
+
+\noindent Aussi, on sait qu'il ne peut pas y avoir à la fois une substitution et une destruction sur une même ligne $i$ de $F_1$.
+\\
+
+\subsection*{Objectif à minimiser}
+
+On obtient la fonction objectif suivante :
+\begin{equation*}
+\min_{s, d, a} \, \sum\limits_i \sum\limits_j c_s(i, j) \cdot s(i, j) + \sum\limits_i \sum\limits_j c_a(i, j) \cdot a(i, j) + 10 \, \sum\limits_i d(i, j)
+\end{equation*}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \section{Compte rendu d'expérimentation (2 points)}
+%   \subsection{Conditions expérimentaless}
+%      {lolsubsec
+%      }
+
+%     \subsubsection{Description synthétique de la machine\,:} 
+%       {lolsubsub
+%       }
+
+\end{document}
+%% Fin mise au format
+
