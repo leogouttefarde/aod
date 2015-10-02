@@ -31,7 +31,9 @@ GOUTTEFARDE Léo (groupe 5)
 
 \subsection*{Données}
 
-\noindent On note $F_1(i)$, la ligne $i \in {1,..,n}$ du fichier 1 et $F_2(j)$ la ligne $j \in {1,..,m}$ du fichier 2.
+\noindent On cherche à créer un patch $P$ restreint minimal qui transforme un fichier $F_1$ de $n$ lignes en un fichier $F_2$ de $m$ lignes.
+
+\noindent On note $F_1(i)$, la ligne $i \in 1 \cdots n$ du fichier 1 et $F_2(j)$ la ligne $j \in 1 \cdots m$ du fichier 2.
 
 \noindent On définit $L(F_i(j))$ comme le nombre de caractères de la ligne $F_i(j)$ (incluant le caractère de fin de ligne).
 
@@ -41,8 +43,7 @@ On introduit les variables de coût suivantes :
 
 \begin{itemize}
 \item[$\bullet$]
-$c_s(i, j) $ : modélise le coût de substitution de la ligne $F_1(i)$ par la ligne $F_2(j)$, nul si 
-$F_1(i)$ = $F_2(i)$ et égal à $c_s(i, j) = 10 + L(F_2(j))$ sinon.
+$c_s(i, j)$ : modélise le coût de substitution de la ligne $F_1(i)$ par la ligne $F_2(j)$, nul si $F_1(i) = F_2(i)$ et égal à $c_s(i, j) = 10 + L(F_2(j))$ sinon.
 \\
 \item[$\bullet$]
 $c_a(i, j) = 10 + L(F_2(j))$ : modélise le coût d'ajout de la ligne $F_2(j)$ après la ligne $F_1(i)$ 
