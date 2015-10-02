@@ -30,13 +30,10 @@ GOUTTEFARDE Léo (groupe 5)
 \section*{Modélisation du problème restreint sous forme de PLNE}
 
 \subsection*{Données}
-\noindent On cherche à créer un patch $P$ restreint minimal qui transforme un fichier $F_1$ de $n$ lignes en un fichier $F_2$ de $m$ lignes.
 
-\noindent Pour toute ligne $i$ de $F_1$, notée $F_1(i)$, on a donc $i \in 1 \cdots n$.
+\noindent On note $F_1(i)$, la ligne $i$ du fichier 1 et $F_2(i)$ la ligne $i$ du fichier 2.
 
-\noindent De même pour toute ligne $j$ de $F_2$, notée $F_2(j)$, on a donc $j \in 1 \cdots m$.
-
-\noindent Finalement, on définit $L(F_2(j))$ comme le nombre de caractères de la ligne $F_2(j)$ (incluant le caractère de fin de ligne).
+\noindent On définit $L(F_i(j))$ comme le nombre de caractères de la ligne $F_i(j)$ (incluant le caractère de fin de ligne).
 
 \subsection*{Variables}
 On introduit les variables de coût suivantes :
@@ -44,7 +41,8 @@ On introduit les variables de coût suivantes :
 
 \begin{itemize}
 \item[$\bullet$]
-$c_s(i, j)$ : modélise le coût de substitution de la ligne $F_1(i)$ par la ligne $F_2(j)$
+$c_s(i, j) $ : modélise le coût de substitution de la ligne $F_1(i)$ par la ligne $F_2(j)$, nul si 
+$F_1(i)$ = $F_2(i)$ et égal à $c_s(i, j) = 10 + L(F_2(j))$ sinon.
 \\
 \item[$\bullet$]
 $c_a(i, j) = 10 + L(F_2(j))$ : modélise le coût d'ajout de la ligne $F_2(j)$ après la ligne $F_1(i)$ 
@@ -68,25 +66,17 @@ $d(i)$ : modélise la destruction (ou non) de la ligne $F_1(i)$
 $a(i, j)$ : modélise l'ajout (ou non) de la ligne $F_2(j)$ après la ligne $F_1(i)$
 \end{itemize}
 
+\subsection*{Objectif à minimiser}
+
+On obtient la fonction objectif suivante :
+\begin{equation*}
+\min_{s, d, a} \, \sum\limits_{i,j} c_s(i, j) \cdot s(i, j) + \sum\limits_{i,j} c_a(i, j) \cdot a(i, j) + 10 \sum\limits_i d(i)
+\end{equation*}
+
 % \begin{equation}
 % c_s(i, j) = 10 + L(F_2(j))
 % \end{equation}
 \subsection*{Contraintes}
-% \paragraph{Justification\,: }
-% {
-%   loltest
-% }
-Les contraintes de coût suivantes sont à considérer pour $c_s$ :
-\\
-\begin{itemize}
-\item[$\bullet$]
-$c_s(i, j) = 0$ si $F_1(i) = F_2(j)$ : le coût de copie des lignes laissées telles quelles est nul
-\\
-\item[$\bullet$]
-$c_s(i, j) = 10 + L(F_2(j))$ si $F_1(i) \ne F_2(j)$ : coût des substitutions classiques
-\end{itemize}
-$\newline$
-\\
 \indent Pour l'ajout et la destruction, on peut d'abord distinguer plusieurs cas :
 
 \subsubsection*{Cas 1 : Nombre minimal de destructions $(n > m)$}
@@ -108,16 +98,6 @@ Si $n = m$, il n'y a pas forcément d'ajout ni de destruction de ligne.
 
 \noindent Finalement, il ne peut pas y avoir à la fois une substitution et une destruction sur une même ligne $i$ de $F_1$.
 \\
-
-\subsection*{Objectif à minimiser}
-
-On obtient la fonction objectif suivante :
-\begin{equation*}
-\min_{s, d, a} \, \sum\limits_{i,j} c_s(i, j) \cdot s(i, j) + \sum\limits_{i,j} c_a(i, j) \cdot a(i, j) + 10 \sum\limits_i d(i, j)
-\end{equation*}
-
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \section{Compte rendu d'expérimentation (2 points)}
