@@ -29,9 +29,20 @@ GOUTTEFARDE Léo (groupe 5)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Modélisation du problème général par équation de Bellman}
 
-% \subsection*{Titre1}
+\subsection*{Objectif}
 
-\noindent 
+$V^*_{ij}() = \left\{
+\begin{array}{ll}
+\min \{ 10 + V^*_{i+1,j}(),
+15 + V^*_{i+k,j}(),
+c_{ij} + V^*_{i+1,j+1}(),
+10 + L_j^B + V^*_{i,j+1}() \} \hspace{2mm} \text{ si $i < m$ ou $j < n$}\\
+V^*_{mn}() \hspace{2mm} \text{ sinon}
+\end{array}
+\right.$
+
+% \noindent 
+
 
 
 \end{document}
