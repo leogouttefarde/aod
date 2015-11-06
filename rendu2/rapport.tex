@@ -29,17 +29,47 @@ GOUTTEFARDE Léo (groupe 5)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Modélisation du problème général par équation de Bellman}
 
+\subsection*{Données}
+
+\begin{itemize}
+\item On cherche à créer un patch $P$ minimal qui transforme un fichier $F_1$ de $n$ lignes en un fichier $F_2$ de $m$ lignes.
+
+\item On note $F_1(i)$, la ligne $i \in 1 \cdots n$ du fichier 1 et $F_2(j)$ la ligne $j \in 1 \cdots m$ du fichier 2.
+
+\item On définit $L(F_i(j))$ comme le nombre de caractères de la ligne $F_i(j)$ (incluant le caractère de fin de ligne).
+
+
+\item Soit $(i,j)$ l'état dans lequel on a utilisé les $i$ premières lignes du fichier $F_1$ de départ pour générer les $j$ premières lignes du fichier $F_2$ de sortie.
+
+\item Soit $C^*_{ij}$ le coût optimal du patch transformant les $i$ premières lignes du fichier $F_1$ d'entrée en les $j$ premières lignes du fichier $F_2$ de sortie.
+\end{itemize}
+\hfill \\
+
+
 \subsection*{Objectif}
 
-$V^*_{ij}() = \left\{
-\begin{array}{ll}
-\min \{ 10 + V^*_{i+1,j}(),
-15 + V^*_{i+k,j}(),
-c_{ij} + V^*_{i+1,j+1}(),
-10 + L_j^B + V^*_{i,j+1}() \} \hspace{2mm} \text{ si $i < m$ ou $j < n$}\\
-V^*_{mn}() \hspace{2mm} \text{ sinon}
-\end{array}
-\right.$
+Pour tout état $(i,j)$, il y a 4 opérations possibles :
+\begin{enumerate}
+\item Ajout [+] : aller vers l'état $(i,j+1)$, en ajoutant la ligne $B_j$ au fichier $F_1$ d'entrée. Coût = $10 + L_j^B$
+
+\item Substitution [=] : aller vers l'état $(i+1,j+1)$, en substituant la ligne $F_1(i)$ par la ligne $F_2(j)$. Coût = 0 si $F_1(i) = F_2(j)$, 10 + $L_j^B$ sinon.
+
+\item Destruction simple [d] : aller vers l'état $(i+1,j)$ en détruisant la ligne $i$ du fichier d'entrée. Coût = 10
+
+\item Destruction multiple [D] : aller vers l'état $(i+w,j),\ w \in 2 \cdots n$ en détruisant les lignes $i \cdots i + w-1$ du fichier d'entrée. Coût = 15
+\end{enumerate}
+\hfill \\
+
+Ainsi
+
+$$\begin{array}{rll}
+C^*_{ij}() = min ( & 10 + C^*_{i+1,j}(),\\
+& 15 + C^*_{i+k,j}(),\\
+& c_{ij} + C^*_{i+1,j+1}(),\\
+& G + C^*_{i,j+1}() \hspace{4mm} )
+\end{array}$$
+
+où $G_{ij} = 0$ si $F_1(i) = F_2(j)$, $10 + L(F_2(j))$ sinon.
 
 % \noindent 
 
