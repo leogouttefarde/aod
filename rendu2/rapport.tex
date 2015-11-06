@@ -39,11 +39,45 @@ GOUTTEFARDE Léo (groupe 5)
 \item On définit $L(F_i(j))$ comme le nombre de caractères de la ligne $F_i(j)$ (incluant le caractère de fin de ligne).
 
 
-\item Soit $(i,j)$ l'état dans lequel on a utilisé les $i$ premières lignes du fichier $F_1$ de départ pour générer les $j$ premières lignes du fichier $F_2$ de sortie.
+\item Soit $(i,j)$ l'état dans lequel on a utilisé les $i$ premières lignes du fichier $F_1$ de départ pour générer les $j$ premières lignes du fichier de sortie.
 
-\item Soit $C^*_{ij}$ le coût optimal du patch transformant les $i$ premières lignes du fichier $F_1$ d'entrée en les $j$ premières lignes du fichier $F_2$ de sortie.
+\item Soit $C^*_{ij}$ le coût optimal du patch transformant les $i$ premières lignes du fichier $F_1$ d'entrée en les $j$ premières lignes du fichier de sortie.
 \end{itemize}
-\hfill \\
+\vspace{3mm}
+
+
+\subsection*{Variables}
+On introduit les variables suivantes :
+\\
+
+\begin{itemize}
+\item[$\bullet$]
+$u_{ij}$ : décision à l'état $(i,j)$
+\\
+\item[$\bullet$]
+$h_{ij}$ : coût de substitution de la ligne $F_1(i)$ par la ligne $F_2(j)$.\\
+Vaut 0 si $F_1(i) = F_2(j)$, $10 + L(F_2(j))$ sinon
+\end{itemize}
+\vspace{6mm}
+
+
+On introduit les variables binaires (de valeur 1 ou 0) suivantes :
+\\
+
+\begin{itemize}
+\item[$\bullet$]
+$s_{ij}$ : modélise la substitution (ou non) de la ligne $F_1(i)$ par la ligne $F_2(j)$
+\\
+\item[$\bullet$]
+$d_i$ : modélise la destruction (ou non) de la ligne $F_1(i)$
+\\
+\item[$\bullet$]
+$D_i^w$ : modélise la destruction (ou non) des $m$ lignes de la ligne $k$ à la ligne $k+m-1$ de $F_1$
+\\
+\item[$\bullet$]
+$a_j$ : modélise l'ajout (ou non) de la ligne $F_2(j)$
+\end{itemize}
+\vspace{3mm}
 
 
 \subsection*{Objectif}
@@ -58,18 +92,16 @@ Pour tout état $(i,j)$, il y a 4 opérations possibles :
 
 \item Destruction multiple [D] : aller vers l'état $(i+w,j),\ w \in 2 \cdots n$ en détruisant les lignes $i \cdots i + w-1$ du fichier d'entrée. Coût = 15
 \end{enumerate}
-\hfill \\
+\vspace{3mm}
 
-Ainsi
+Ainsi on obtient l'équation de Bellman suivante :
 
 $$\begin{array}{rll}
-C^*_{ij}() = min ( & 10 + C^*_{i+1,j}(),\\
-& 15 + C^*_{i+k,j}(),\\
-& c_{ij} + C^*_{i+1,j+1}(),\\
-& G + C^*_{i,j+1}() \hspace{4mm} )
+C^*_{ij}(a_{j},s_{ij},d_{i},D_{i}^w, u_{ij}) = \min ( & 10 + C^*_{i+1,j}(a_{j},s_{i+1,j},d_{i+1},D_{i+1}^w, u_{ij}),\\
+& 15 + C^*_{i+k,j}(a_{j},s_{i+k,j},d_{i+k},D_{i+k}^w, u_{i+k,j}),\\
+& h_{ij} + C^*_{i+1,j+1}(a_{j+1},s_{i+1,j+1},d_{i+1},D_{i+1}^w, u_{i+1,j+1}),\\
+& 10 + L(F_2(j)) + C^*_{i,j+1}(a_{j+1},s_{i,j+1},d_{i},D_{i}^w, u_{i,j+1}) \hspace{4mm} )
 \end{array}$$
-
-où $G_{ij} = 0$ si $F_1(i) = F_2(j)$, $10 + L(F_2(j))$ sinon.
 
 % \noindent 
 
