@@ -99,10 +99,10 @@ Ainsi on obtient l'équation de Bellman suivante :
 
 $$\begin{array}{rll}
 C^*_{ij}(a_{j},s_{ij},d_{i},D_{i}^w, u_{ij}) = \min (
-& 10 + C^*_{i-1,j}(a_{j},s_{i-1,j},d_{i-1},D_{i-1}^w, u_{ij}),\\
-& 15 + C^*_{i-w,j}(a_{j},s_{i-w,j},d_{i-w},D_{i-w}^w, u_{i-w,j}),\\
-& h_{ij} + C^*_{i-1,j-1}(a_{j-1},s_{i-1,j-1},d_{i-1},D_{i-1}^w, u_{i-1,j-1}),\\
-& 10 + L(F_2(j)) + C^*_{i,j-1}(a_{j-1},s_{i,j-1},d_{i},D_{i}^w, u_{i,j-1}) \hspace{4mm} )
+& 10 + C^*_{i-1,j}(a_{j},s_{i-1,j},d_{i-1},D_{i}^w, u_{i-1,j}),\\
+& 15 + C^*_{i-w,j}(a_{j},s_{i-w,j},d_{i-w},D_{i+1-w}^w, u_{i-w,j}), w \in 2 \cdots i\\
+& h_{ij} + C^*_{i-1,j-1}(a_{j-1},s_{i-1,j-1},d_{i-1},D_{i}^w, u_{i-1,j-1}),\\
+& 10 + L(F_2(j)) + C^*_{i,j-1}(a_{j-1},s_{i,j-1},d_{i},D_{i+1}^w, u_{i,j-1}) \hspace{4mm} )
 \end{array}$$
 
 % \noindent 
