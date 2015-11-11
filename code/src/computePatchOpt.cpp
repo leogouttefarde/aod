@@ -1,3 +1,14 @@
+/*!
+ * \file      computePatchOpt.cpp
+ * \author    Jérémie Piellard
+ * \author    Léo Gouttefarde
+ * \date      November, 2015
+ * \brief     Implements the computePatchOpt program.
+ * \warning   Usage: applyPatch patchFile originalFile 
+ * \copyright GNU Public License.
+ *
+ * This is the computePatchOpt main program.
+ */
 
 #include <cstdlib>
 #include <iostream>
