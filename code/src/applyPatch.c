@@ -64,6 +64,7 @@ int applyPatch(FILE *patchFile, FILE *originalFile){
 					}
 					printf("%s",str_patch); // insert the line after k-th line of the original file 
 				}
+				previous=current;
 				break;
 			case '=':
 				if(current<=previous) // k must be strictly increasing
@@ -82,6 +83,7 @@ int applyPatch(FILE *patchFile, FILE *originalFile){
 						printf("%s",str_file);	
 					}
 				printf("%s",str_patch); // Replace the k-th line
+				previous=current;
 				break;
 			case 'd':
 				// Copy all intermediate lines of the original file
@@ -92,6 +94,7 @@ int applyPatch(FILE *patchFile, FILE *originalFile){
 					if(i<current-previous-1)
 						printf("%s",str_file);	
 				}
+				previous=current;
 				break;
 
 			case 'D':
@@ -113,6 +116,8 @@ int applyPatch(FILE *patchFile, FILE *originalFile){
 				// file
 				for(i=0;i<m;i++)
 					getline(&str_file, &len, originalFile);
+				
+				previous=current+m-1;
 				break;
 			
 			default:
@@ -120,7 +125,6 @@ int applyPatch(FILE *patchFile, FILE *originalFile){
 				break;
 		}
 
-		previous=current;
 
 	}	
 
