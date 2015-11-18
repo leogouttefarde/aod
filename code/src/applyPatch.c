@@ -62,6 +62,12 @@ int applyPatch(FILE *patchFile, FILE *originalFile){
 						getline(&str_file, &len, originalFile);
 						printf("%s",str_file);	
 					}
+
+					// Fix bug autre commande +
+					if (current-previous > 0 && str_file && !strrchr(str_file, '\n')) {
+						putchar('\n');
+					}
+
 					printf("%s",str_patch); // insert the line after k-th line of the original file 
 				}
 				previous=current;
