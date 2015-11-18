@@ -3,11 +3,11 @@ CC=gcc
 CXX=g++
 CFLAGS = -Wall -Wextra -std=c99 -g -O3
 CXXFLAGS = -Wall -Wextra -g -O3
-LDFLAGS = -lm -s
+LDFLAGS = -lm #-s
 EXEC=computePatchOpt
 
 
-all:
+all: $(EXEC) applyPatch
 
 $(EXEC): $(EXEC).cpp
 	$(CXX) $(CXXFLAGS) $^ -o $@ $(LDFLAGS)

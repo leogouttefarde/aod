@@ -32,11 +32,11 @@ enum Operation {
 typedef struct OptOp_ {
 	int k;
 	enum Operation op;
-	int c;
-	std::string str;
+	//int c;
+	//std::string str;
 } OptOp;
 
-OptOp opt[512][512];
+OptOp opt[9000][9000];
 
 
 int N, M;
@@ -95,12 +95,12 @@ void print_sol2()
 
 	while (i <= N && j <= M && !(i == N  && j == M)) {
 		// cout << "i = " << i << "j = " << j << endl;
-		int c = opt[i][j].c;
+		//int c = opt[i][j].c;
 		switch (opt[i][j].op) {
 			case AJOUT:
 				cout << "+ " << i << endl;
 
-				cout << opt[i][j].str;
+				//cout << opt[i][j].str;
 
 				if (j < M-1)
 					cout << endl;
@@ -109,17 +109,17 @@ void print_sol2()
 				break;
 
 			case SUBST:
-				if (opt[i][j].str.size() > 0) {
+				//if (opt[i][j].str.size() > 0) {
 					cout << "= " << i+1 << endl;
-					cout << opt[i][j].str << endl;
+					//cout << opt[i][j].str << endl;
 					i++;
 					j++;
-				}
-				else {
-					i++;
-					j++;
-					continue;
-				}
+				//}
+				//else {
+				//	i++;
+				//	j++;
+				//	continue;
+				//}
 				break;
 
 			case SUPPR:
@@ -188,6 +188,9 @@ int B(int i, int j)
 
 
 		for (int l = 2; l <= N; l++) {
+			if ((i+l) > N)
+				break;
+
 			streampos pos = entree.tellg();
 			std::string prev = ligne_entree;
 
@@ -261,14 +264,14 @@ int B(int i, int j)
 
 	opt[i][j].op = op;
 	opt[i][j].k = k;
-	opt[i][j].c = cur_cout;
+	//opt[i][j].c = cur_cout;
 
-	if (op == AJOUT)
-		opt[i][j].str = a_str;
-
-	else if (op == SUBST)
-		opt[i][j].str = s_str;
-
+	//if (op == AJOUT)
+	//	opt[i][j].str = a_str;
+////
+	//else if (op == SUBST)
+	//	opt[i][j].str = s_str;
+//
 
 	return cur_cout;
 }
@@ -278,6 +281,7 @@ int main(int argc, char **argv)
 {
 	if (argc < 3) {
 		cout << "Usage : " << argv[0] << " <unpatched> <patched>" << endl;
+		return EXIT_SUCCESS;
 	}
 
 	entree.open(argv[1], std::ifstream::in);
@@ -286,16 +290,21 @@ int main(int argc, char **argv)
 	N = compter_lignes(entree);
 	M = compter_lignes(sortie);
 
+	// if (N > 512 || M > 512) {
+	// 	cout << "Current file too big for this test version" << endl;
+	// 	exit(1);
+	// }
+
 
 	getline(entree, ligne_entree);
 	getline(sortie, ligne_sortie);
 
-	// cout << "N = " << N << endl;
-	// cout << "M = " << M << endl;
+	cout << "N = " << N << endl;
+	cout << "M = " << M << endl;
 
 	int out = B(0, 0);
 
-	// cout << "Coût = " << out << endl;
+	cout << "Coût = " << out << endl;
 
 	entree.close();
 	sortie.close();
