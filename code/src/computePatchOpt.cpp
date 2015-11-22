@@ -36,21 +36,21 @@ typedef struct OptOp_ {
 	enum Operation op;
 } OptOp;
 
-OptOp *opt;
-int *mem;
+static OptOp *opt;
+static int *mem;
 
 
-uint32_t NB_CALC_TOT;
-uint32_t nb_calc_done = 0;
+static uint32_t NB_CALC_TOT;
+static uint32_t nb_calc_done = 0;
 
 
-bool VERBOSE = false;
+static bool VERBOSE = false;
 
 
-int N, M;
+static int N, M;
 
-vector<string> input;
-vector<string> output;
+static vector<string> input;
+static vector<string> output;
 
 
 static inline int taille_ligne(int j)
@@ -80,7 +80,7 @@ static inline uint32_t get(int i, int j)
 	// return j * (N+1) + i;
 }
 
-void print_sol2()
+static inline void displayPatch()
 {
 	int i = 0, j = 0;
 
@@ -130,19 +130,6 @@ void print_sol2()
 
 		// cout << "  : " << c << endl;
 		// cout << endl;
-	}
-}
-
-void print_sol()
-{
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < M; j++) {
-			OptOp op = opt[get(i, j)];
-
-			cout << op.op << " ";
-		}
-
-		cout << endl;
 	}
 }
 
@@ -311,8 +298,7 @@ int main(int argc, char **argv)
 	const int out = B(0, 0);
 
 
-	// print_sol();
-	print_sol2();
+	displayPatch();
 
 	cerr << endl << "Coût = " << out << endl;
 
