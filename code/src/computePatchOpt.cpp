@@ -87,7 +87,7 @@ void print_sol2()
 
 	if (VERBOSE)
 		// cout << '\r';
-		cout << endl;
+		cerr << endl;
 		// cout << '\r';
 
 	while (i <= N && j <= M && !(i == N  && j == M)) {
@@ -231,8 +231,8 @@ static inline int B(int i, int j)
 	nb_calc_done++;
 
 	if (VERBOSE) {
-		std::cout << std::fixed << std::setw( 3 ) << std::setprecision( 2 );
-		std::cout << "\rAvancée : " << nb_calc_done << " / " << NB_CALC_TOT << ", " << ((float)nb_calc_done*100)/NB_CALC_TOT << " %";
+		std::cerr << std::fixed << std::setw( 3 ) << std::setprecision( 2 );
+		std::cerr << "\rAvancée : " << nb_calc_done << " / " << NB_CALC_TOT << ", " << ((float)nb_calc_done*100)/NB_CALC_TOT << " %";
 	}
 	// std::cout << "i = " << i << "j = " << j << endl;
 
