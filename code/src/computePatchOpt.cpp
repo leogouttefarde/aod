@@ -4,7 +4,7 @@
  * \author    Léo Gouttefarde
  * \date      November, 2015
  * \brief     Implements the computePatchOpt program.
- * \warning   Usage: applyPatch patchFile originalFile 
+ * \warning   Usage: computePatchOpt originalFile patchedFile
  * \copyright GNU Public License.
  *
  * This is the computePatchOpt main program.
@@ -16,6 +16,7 @@
 #include <string>
 #include <algorithm>
 #include <fstream>
+#include <vector>
 #include <stdint.h>
 
 using namespace std;
@@ -32,44 +33,22 @@ enum Operation {
 typedef struct OptOp_ {
 	int k;
 	enum Operation op;
-	//int c;
-	//std::string str;
+	int c;
 } OptOp;
 
-OptOp opt[9000][9000];
+OptOp *opt;
+int *mem;
 
 
 int N, M;
 
-std::ifstream entree;
-std::ifstream sortie;
+vector<string> input;
+vector<string> output;
 
 
-
-std::string ligne_entree;
-std::string ligne_sortie;
-
-
-
-int compter_lignes(std::ifstream& stream)
+static inline int taille_ligne(int j)
 {
-	if (stream.is_open()) {
-		int count = std::count(std::istreambuf_iterator<char>(stream),
-						std::istreambuf_iterator<char>(), '\n') + 1;
-
-		stream.clear();
-		stream.seekg(0, std::ios::beg);
-
-		return count;
-	}
-
-	else
-		return 0;
-}
-
-int taille_ligne(int j)
-{
-	int taille = ligne_sortie.size();
+	int taille = output[j].size();
 
 	if (j < M-1)
 		taille++;
@@ -77,9 +56,9 @@ int taille_ligne(int j)
 	return taille;
 }
 
-int calc_cout_subst(int j)
+static inline int calc_cout_subst(int i, int j)
 {
-	if (ligne_entree == ligne_sortie) {
+	if (input[i] == output[j]) {
 		return 0;
 	}
 
@@ -88,6 +67,11 @@ int calc_cout_subst(int j)
 	}
 }
 
+static inline uint32_t get(int i, int j)
+{
+	return i * (M+1) + j;
+	// return j * (N+1) + i;
+}
 
 void print_sol2()
 {
@@ -96,11 +80,11 @@ void print_sol2()
 	while (i <= N && j <= M && !(i == N  && j == M)) {
 		// cout << "i = " << i << "j = " << j << endl;
 		//int c = opt[i][j].c;
-		switch (opt[i][j].op) {
+		switch (opt[get(i, j)].op) {
 			case AJOUT:
 				cout << "+ " << i << endl;
 
-				//cout << opt[i][j].str;
+				cout << output[j];
 
 				if (j < M-1)
 					cout << endl;
@@ -109,17 +93,17 @@ void print_sol2()
 				break;
 
 			case SUBST:
-				//if (opt[i][j].str.size() > 0) {
+				if (input[i] != output[j]) {
 					cout << "= " << i+1 << endl;
-					//cout << opt[i][j].str << endl;
+					cout << output[j] << endl;
 					i++;
 					j++;
-				//}
-				//else {
-				//	i++;
-				//	j++;
-				//	continue;
-				//}
+				}
+				else {
+					i++;
+					j++;
+					continue;
+				}
 				break;
 
 			case SUPPR:
@@ -128,9 +112,12 @@ void print_sol2()
 				break;
 
 			case MSUPPR:
-				cout << "D " << i+1 << " " << opt[i][j].k << endl;
-				i += opt[i][j].k;
+				cout << "D " << i+1 << " " << opt[get(i, j)].k << endl;
+				i += opt[get(i, j)].k;
 				break;
+
+			default:
+				exit(-1);
 		}
 
 		// cout << "  : " << c << endl;
@@ -142,7 +129,7 @@ void print_sol()
 {
 	for (int i = 0; i < N; i++) {
 		for (int j = 0; j < M; j++) {
-			OptOp op = opt[i][j];
+			OptOp op = opt[get(i, j)];
 
 			cout << op.op << " ";
 		}
@@ -151,35 +138,30 @@ void print_sol()
 	}
 }
 
-int B(int i, int j)
+static inline int B(int i, int j)
 {
 	// Fin rec
 	if (i == N && j == M) {
 		return 0;
 	}
 
+	if (mem[get(i, j)] >= 0)
+		return mem[get(i, j)];
+
+
 
 	int cout[NB_OPS] = { -1, -1, -1, -1 };
 	int k = -1;
 
-	std::string s_str, a_str;
+	string s_str, a_str;
 
 	// Si fichier de sortie écrit, plus que suppressions possibles (d pour 1 ligne, D pour plus)
 	if (j < M) {
 		int taille = taille_ligne(j);
 
-		streampos pos = sortie.tellg();
-		std::string prev = ligne_sortie;
-
-		a_str = ligne_sortie;
-
-		getline(sortie, ligne_sortie);
+		a_str = output[j];
 
 		cout[AJOUT] = 10 + taille + B(i, j + 1);
-
-		sortie.clear();
-		sortie.seekg(pos);
-		ligne_sortie = prev;
 	}
 
 	// Si fichier d'entrée parcouru, seuls ajouts possibles
@@ -191,18 +173,7 @@ int B(int i, int j)
 			if ((i+l) > N)
 				break;
 
-			streampos pos = entree.tellg();
-			std::string prev = ligne_entree;
-
-
-			for (int p = 0; p < l; p++)
-				getline(entree, ligne_entree);
-
 			int cur_cout = 15 + B(i + l, j);
-
-			entree.clear();
-			entree.seekg(pos);
-			ligne_entree = prev;
 
 			if (cur_cout < cout[MSUPPR] || cout[MSUPPR] == -1) {
 				cout[MSUPPR] = cur_cout;
@@ -211,42 +182,18 @@ int B(int i, int j)
 		}
 
 
-		std::string prev = ligne_entree;
-		streampos pos = entree.tellg();
-		getline(entree, ligne_entree);
-
 		cout[SUPPR] = 10 + B(i + 1, j);
-
-		entree.clear();
-		entree.seekg(pos);
-		ligne_entree = prev;
 
 
 		// Si fichier de sortie écrit, plus que suppressions possibles (d pour 1 ligne, D pour plus)
 		if (j < M) {
-			int cout_subst = calc_cout_subst(j);
-
-			streampos e_pos = entree.tellg();
-			streampos s_pos = sortie.tellg();
-			std::string prev_e = ligne_entree;
-			std::string prev_s = ligne_sortie;
+			int cout_subst = calc_cout_subst(i, j);
 
 			if (cout_subst > 0)
-				s_str = ligne_sortie;
+				s_str = output[j];
 
-
-			getline(entree, ligne_entree);
-			getline(sortie, ligne_sortie);
 
 			cout[SUBST] = cout_subst + B(i + 1, j + 1);
-
-			entree.clear();
-			entree.seekg(e_pos);
-			ligne_entree = prev_e;
-			ligne_sortie = prev_s;
-
-			sortie.clear();
-			sortie.seekg(s_pos);
 		}
 	}
 
@@ -262,55 +209,103 @@ int B(int i, int j)
 		}
 	}
 
-	opt[i][j].op = op;
-	opt[i][j].k = k;
-	//opt[i][j].c = cur_cout;
+	opt[get(i, j)].op = op;
+	opt[get(i, j)].k = k;
+	opt[get(i, j)].c = cur_cout;
 
-	//if (op == AJOUT)
-	//	opt[i][j].str = a_str;
-////
-	//else if (op == SUBST)
-	//	opt[i][j].str = s_str;
-//
+	mem[get(i, j)] = cur_cout;
+
+	// std::cout << "i = " << i << "j = " << j << endl;
 
 	return cur_cout;
 }
 
+static inline bool readFile(char *path, vector<string>& oLines)
+{
+	ifstream file(path, ifstream::in);
+
+	if (file.is_open()) {
+
+		string line;
+		while (std::getline(file, line))
+			oLines.push_back(line);
+
+		file.close();
+		return true;
+	}
+
+	return false;
+}
 
 int main(int argc, char **argv)
 {
 	if (argc < 3) {
-		cout << "Usage : " << argv[0] << " <unpatched> <patched>" << endl;
+		cout << "Usage : " << argv[0] << " <originalFile> <patchedFile> " << endl;
 		return EXIT_SUCCESS;
 	}
 
-	entree.open(argv[1], std::ifstream::in);
-	sortie.open(argv[2], std::ifstream::in);
 
-	N = compter_lignes(entree);
-	M = compter_lignes(sortie);
+	readFile(argv[1], input);
+	readFile(argv[2], output);
 
-	// if (N > 512 || M > 512) {
-	// 	cout << "Current file too big for this test version" << endl;
-	// 	exit(1);
+	// cout << "N = " << input.size() << endl;
+	// cout << "M = " << output.size() << endl;
+
+	N = input.size();
+	M = output.size();
+
+
+	mem = (int*)malloc((N+1) * (M+1) * sizeof(int));
+
+	for (int i = 0; i <= N; i++) {
+		for (int j = 0; j <= M; j++) {
+			mem[get(i, j)] = -1;
+		}
+	}
+
+
+	// mem = (int**)calloc(N+1, sizeof(int*));
+
+	// for (int i = 0; i <= N; i++) {
+	// 	mem[i] = (int*)calloc(M+1, sizeof(int));
+
+	// 	for (int j = 0; j <= M; j++) {
+	// 		mem[i][j] = -1;
+	// 	}
 	// }
 
 
-	getline(entree, ligne_entree);
-	getline(sortie, ligne_sortie);
 
-	cout << "N = " << N << endl;
-	cout << "M = " << M << endl;
+	opt = (OptOp*)calloc((N+1) * (M+1), sizeof(OptOp));
+	for (int i = 0; i <= N; i++) {
+
+		// Unused operation value
+		for (int j = 0; j <= M; j++) {
+			// cout << get(i,j) << " ";
+			opt[get(i, j)].op = (Operation)-1;
+		}
+		// cout << endl;
+	}
+
+	// opt = (OptOp**)calloc(N+1, sizeof(OptOp*));
+
+	// for (int i = 0; i <= N; i++) {
+	// 	opt[i] = (OptOp*)calloc(M+1, sizeof(OptOp));
+
+	// 	// Unused operation value
+	// 	for (int j = 0; j <= M; j++) {
+	// 		opt[i][j].op = (Operation)-1;
+	// 	}
+	// }
 
 	int out = B(0, 0);
 
-	cout << "Coût = " << out << endl;
-
-	entree.close();
-	sortie.close();
 
 	// print_sol();
 	print_sol2();
+
+	// cout << endl << "Cout = " << out << endl;
+
 
 	return EXIT_SUCCESS;
 }

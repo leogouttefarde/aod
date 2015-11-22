@@ -2,8 +2,10 @@
 CC=gcc
 CXX=g++
 CFLAGS = -Wall -Wextra -std=c99 -g -O3
-CXXFLAGS = -Wall -Wextra -g -O3
-LDFLAGS = -lm #-s
+# CXXFLAGS = -Wall -Wextra -g -O3
+CXXFLAGS = -Wall -Wextra -O3
+# LDFLAGS = -lm #-s
+LDFLAGS = -lm -s
 EXEC=computePatchOpt
 
 
