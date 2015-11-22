@@ -23,6 +23,9 @@ applyPatch: applyPatch.c
 run: $(EXEC)
 	./$(EXEC) tests/test_entree.txt tests/test_sortie.txt
 
+bench:
+	./$(EXEC) benchmark/benchmark_01/{source,target} > new_patch 2> new_infos
+
 clean:
 	rm -f $(EXEC) applyPatch
 
