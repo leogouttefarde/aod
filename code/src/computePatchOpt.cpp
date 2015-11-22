@@ -327,7 +327,7 @@ int main(int argc, char **argv)
 	// print_sol();
 	print_sol2();
 
-	// cout << endl << "Cout = " << out << endl;
+	cerr << endl << "Coût = " << out << endl;
 
 
 	return EXIT_SUCCESS;
