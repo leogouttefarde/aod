@@ -166,13 +166,10 @@ static inline int B(int i, int j)
 	int cout[NB_OPS] = { -1, -1, -1, -1 };
 	int k = -1;
 
-	string s_str, a_str;
 
 	// Si fichier de sortie écrit, plus que suppressions possibles (d pour 1 ligne, D pour plus)
 	if (j < M) {
 		int taille = taille_ligne(j);
-
-		a_str = output[j];
 
 		cout[AJOUT] = 10 + taille + B(i, j + 1);
 	}
@@ -201,10 +198,6 @@ static inline int B(int i, int j)
 		// Si fichier de sortie écrit, plus que suppressions possibles (d pour 1 ligne, D pour plus)
 		if (j < M) {
 			int cout_subst = calc_cout_subst(i, j);
-
-			if (cout_subst > 0)
-				s_str = output[j];
-
 
 			cout[SUBST] = cout_subst + B(i + 1, j + 1);
 		}
