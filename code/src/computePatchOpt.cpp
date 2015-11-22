@@ -18,6 +18,7 @@
 #include <fstream>
 #include <vector>
 #include <iomanip>
+#include <queue>
 #include <stdint.h>
 
 using namespace std;
@@ -201,6 +202,84 @@ static inline int B(int i, int j)
 	return cur_cout;
 }
 
+typedef struct Dist_ {
+	uint32_t val;
+	uint32_t last;
+} Dist;
+
+static inline int dijkstra()
+{
+	// Ordre des champs : priorité, id
+	priority_queue< pair<uint32_t, uint32_t> > queue;
+	Dist dist[(N+1)*(M+1)];
+
+	for (int i = 0; i <= N; i++) {
+		for (int j = 0; j<= M; j++) {
+			dist[get(i, j)].val = UINT32_MAX;
+			dist[get(i, j)].last = 0;
+		}
+	}
+
+	dist[get(N, M)].val = 0;
+
+	queue.push(make_pair(get(N, M), 0));
+
+
+	pair<uint32_t, uint32_t> n;
+	uint32_t idNode;
+
+	while (!queue.empty()) {
+
+		n = queue.top();
+		queue.pop();
+
+		idNode = n.second;
+
+		// https://fr.wikipedia.org/wiki/Algorithme_de_Dijkstra#Pseudo-code
+
+
+		// if (idNode) ...
+		// for f in noeuds suivants n
+
+			// if (dist[f].val > dist[idNode].val + cout) {
+			// 	f.val = dist[idNode].val + cout;
+			// 	f.last = idNode;
+			// }
+
+
+			// for u in 0 .. Last loop
+			// 	for v in 0 .. Last loop
+
+			// 		cArc := G.Matrice(u, v);
+
+			// 		if cArc.isValid then
+			// 			if (Distance(u).Val + cArc.Cout) < Distance(v).Val then
+			// 				Distance(v).Val := Distance(u).Val + cArc.Cout;
+			// 				Attente.Enqueue(New_Item => ( Distance(v).Val, v ));
+
+
+			// 				Nat_Lists.Clear( Distance(v).Chemin );
+
+			// 				Position := Nat_Lists.First( Distance(u).Chemin );
+
+			// 				-- Copy u to v
+			// 				while Nat_Lists.Has_Element( Position ) loop
+			// 					Nat_Lists.Append( Distance(v).Chemin, Nat_Lists.Element(Position) );
+			// 					Nat_Lists.Next( Position );
+			// 				end loop;
+
+			// 				-- Add u to path
+			// 				Nat_Lists.Append( Distance(v).Chemin, u );
+			// 			end if;
+			// 		end if;
+
+			// 	end loop;
+			// end loop;
+
+	}
+}
+
+
 static inline bool readFile(char *path, vector<string>& oLines)
 {
 	ifstream file(path, ifstream::in);
@@ -283,12 +362,14 @@ int main(int argc, char **argv)
 	// 	}
 	// }
 
-	const int out = B(0, 0);
+	// const int out = B(0, 0);
+
+	dijkstra();
 
 
-	displayPatch();
+	// displayPatch();
 
-	cerr << endl << "Coût = " << out << endl;
+	// cerr << endl << "Coût = " << out << endl;
 
 
 	return EXIT_SUCCESS;
