@@ -138,10 +138,13 @@ int applyPatch(FILE *patchFile, FILE *originalFile){
 	while(getline(&str_file, &len, originalFile)!=-1) printf("%s",str_file);	
 
 
-	free(str_patch);
-	free(str_file);
-	return 0;
+	if (str_patch != NULL)
+		free(str_patch);
 
+	if (str_file != NULL)
+		free(str_file);
+
+	return 0;
 }
 
 /**
