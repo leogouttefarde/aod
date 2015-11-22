@@ -53,16 +53,6 @@ static vector<string> input;
 static vector<string> output;
 
 
-static inline int taille_ligne(int j)
-{
-	int taille = output[j].size();
-
-	if (j < M-1)
-		taille++;
-
-	return taille;
-}
-
 static inline int calc_cout_subst(int i, int j)
 {
 	if (input[i] == output[j]) {
@@ -70,7 +60,7 @@ static inline int calc_cout_subst(int i, int j)
 	}
 
 	else {
-		return 10 + taille_ligne(j);
+		return 10 + output[j].size();
 	}
 }
 
@@ -151,9 +141,7 @@ static inline int B(int i, int j)
 
 	// Si fichier de sortie écrit, plus que suppressions possibles (d pour 1 ligne, D pour plus)
 	if (j < M) {
-		int taille = taille_ligne(j);
-
-		cout[AJOUT] = 10 + taille + B(i, j + 1);
+		cout[AJOUT] = 10 + output[j].size() + B(i, j + 1);
 	}
 
 	// Si fichier d'entrée parcouru, seuls ajouts possibles
