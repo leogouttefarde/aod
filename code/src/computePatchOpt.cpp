@@ -17,6 +17,7 @@
 #include <algorithm>
 #include <fstream>
 #include <vector>
+#include <iomanip>
 #include <stdint.h>
 
 using namespace std;
@@ -38,6 +39,13 @@ typedef struct OptOp_ {
 
 OptOp *opt;
 int *mem;
+
+
+uint32_t NB_CALC_TOT;
+uint32_t nb_calc_done = 0;
+
+
+bool VERBOSE = false;
 
 
 int N, M;
@@ -76,6 +84,11 @@ static inline uint32_t get(int i, int j)
 void print_sol2()
 {
 	int i = 0, j = 0;
+
+	if (VERBOSE)
+		// cout << '\r';
+		cout << endl;
+		// cout << '\r';
 
 	while (i <= N && j <= M && !(i == N  && j == M)) {
 		// cout << "i = " << i << "j = " << j << endl;
@@ -215,6 +228,12 @@ static inline int B(int i, int j)
 
 	mem[get(i, j)] = cur_cout;
 
+	nb_calc_done++;
+
+	if (VERBOSE) {
+		std::cout << std::fixed << std::setw( 3 ) << std::setprecision( 2 );
+		std::cout << "\rAvancée : " << nb_calc_done << " / " << NB_CALC_TOT << ", " << ((float)nb_calc_done*100)/NB_CALC_TOT << " %";
+	}
 	// std::cout << "i = " << i << "j = " << j << endl;
 
 	return cur_cout;
@@ -244,6 +263,8 @@ int main(int argc, char **argv)
 		return EXIT_SUCCESS;
 	}
 
+	if (argc == 4)
+		VERBOSE = true;
 
 	readFile(argv[1], input);
 	readFile(argv[2], output);
@@ -253,6 +274,8 @@ int main(int argc, char **argv)
 
 	N = input.size();
 	M = output.size();
+
+	NB_CALC_TOT = (N+1) * (M+1) - 1;
 
 
 	mem = (int*)malloc((N+1) * (M+1) * sizeof(int));
