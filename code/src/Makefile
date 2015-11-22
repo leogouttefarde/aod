@@ -33,6 +33,6 @@ cost: patchCost
 	./patchCost tests/patch.txt tests/test_entree.txt
 
 clean:
-	rm -f $(EXEC) applyPatch
+	rm -f $(EXEC) applyPatch patchCost
 
 
