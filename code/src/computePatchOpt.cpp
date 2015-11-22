@@ -34,7 +34,6 @@ enum Operation {
 typedef struct OptOp_ {
 	int k;
 	enum Operation op;
-	int c;
 } OptOp;
 
 OptOp *opt;
@@ -86,21 +85,17 @@ void print_sol2()
 	int i = 0, j = 0;
 
 	if (VERBOSE)
-		// cout << '\r';
 		cerr << endl;
-		// cout << '\r';
 
 	while (i <= N && j <= M && !(i == N  && j == M)) {
+
 		// cout << "i = " << i << "j = " << j << endl;
-		//int c = opt[i][j].c;
+		//int c = mem[get(i, j)].c;
+
 		switch (opt[get(i, j)].op) {
 			case AJOUT:
 				cout << "+ " << i << endl;
-
-				cout << output[j];
-
-				if (j < M-1)
-					cout << endl;
+				cout << output[j] << endl;
 
 				j++;
 				break;
@@ -197,7 +192,7 @@ static inline int B(int i, int j)
 
 		// Si fichier de sortie écrit, plus que suppressions possibles (d pour 1 ligne, D pour plus)
 		if (j < M) {
-			int cout_subst = calc_cout_subst(i, j);
+			const int cout_subst = calc_cout_subst(i, j);
 
 			cout[SUBST] = cout_subst + B(i + 1, j + 1);
 		}
@@ -217,7 +212,6 @@ static inline int B(int i, int j)
 
 	opt[get(i, j)].op = op;
 	opt[get(i, j)].k = k;
-	opt[get(i, j)].c = cur_cout;
 
 	mem[get(i, j)] = cur_cout;
 
@@ -314,7 +308,7 @@ int main(int argc, char **argv)
 	// 	}
 	// }
 
-	int out = B(0, 0);
+	const int out = B(0, 0);
 
 
 	// print_sol();
