@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 
+/* structure utilisée seulement dans display_solution */
 struct Solution {
     int _i, _j;
     int  _op;
@@ -20,16 +21,13 @@ Solver::Solver (const char *source_path, const char *target_path):
     
     _states ( (_source.nb_lines()+1) * (_target.nb_lines()+1) )
 {
-//CHECK TAILLES
+//CHECK TAILLES ?
     std::cerr << _source.nb_lines() << " lignes en entree, "
               << _target.nb_lines() <<  " lignes en sortie." << std::endl;
     
     compute_costs();
     
     std::cerr << "Cout total : " << get_cost(_source.nb_lines(), _target.nb_lines()) << std::endl;
-}
-
-Solver::~Solver (){
 }
 
 void Solver::display () {
@@ -182,17 +180,11 @@ void Solver::compute_state (int i, int j) {
 }
 
 void Solver::indices_from (int &i, int &j, int op) {
-    if (op == NONE) {
-        i--;
-        j--;
-    } else if (op == ADD) {
-        j--;
-    } else if (op == SUB) {
-        i--;
-        j--;
-    } else {// DEST
-        i -= op - DEST;
-    }
+    int di = 0, dj = 0;
+    indices_to(di, dj, op);
+
+    i -= di;
+    j -= dj;
 }
 
 void Solver::indices_to (int &i, int &j, int op) {

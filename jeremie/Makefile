@@ -6,16 +6,19 @@ FLAGS = -O3
 
 .PHONY: test
 
-all: $(BINDIR)/computePatch $(BINDIR)/applyPatch
+all: clean $(BINDIR)/computePatch $(BINDIR)/applyPatch $(BINDIR)/patchCost
 
-$(BINDIR)/computePatch: $(SRCDIR)/main.cpp $(SRCDIR)/file.cpp $(SRCDIR)/file.hpp $(SRCDIR)/solver.cpp $(SRCDIR)/solver.hpp
-	g++ $(FLAGS) $(SRCDIR)/main.cpp $(SRCDIR)/file.cpp $(SRCDIR)/solver.cpp -o $(BINDIR)/computePatch
+$(BINDIR)/computePatch: $(SRCDIR)/computePatch.cpp $(SRCDIR)/file.cpp $(SRCDIR)/file.hpp $(SRCDIR)/solver.cpp $(SRCDIR)/solver.hpp
+	g++ $(FLAGS) $(SRCDIR)/computePatch.cpp $(SRCDIR)/file.cpp $(SRCDIR)/solver.cpp -o $(BINDIR)/computePatch
+
+$(BINDIR)/patchCost: $(SRCDIR)/patchCost.cpp $(SRCDIR)/file.cpp $(SRCDIR)/file.hpp
+	g++ $(FLAGS) $(SRCDIR)/patchCost.cpp $(SRCDIR)/file.cpp -o $(BINDIR)/patchCost
 
 $(BINDIR)/applyPatch: $(SRCDIR)/applyPatch.c
 	gcc $(FLAGS) $(SRCDIR)/applyPatch.c -o $(BINDIR)/applyPatch
 
 clean:
-	rm $(BINDIR)/*
+	rm -f $(BINDIR)/*
 
 test: all
 	cd $(TESTDIR) ; ../$(BINDIR)/computePatch source target > patch

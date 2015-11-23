@@ -30,7 +30,6 @@ class Solver {
         
     public:
         Solver (const char *source_path, const char *target_path);
-        ~Solver ();
         
         void display ();
         
@@ -54,8 +53,8 @@ class Solver {
         void compute_costs ();
         void compute_state (int i, int j);
         
-        /* si on est dans (i,j) et est venu en faisant l'opération op,
-         * met dans i et j d'ou on vient */
+        /* calcule d'ou on vient sachant qu'on est dans (i,j) et venu en faisant l'opération op,
+         * met le résultat dans i et j */
         void indices_from (int &i, int &j, int op);
         void indices_to (int &i, int &j, int op);
 };
