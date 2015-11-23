@@ -1,0 +1,3 @@
+Pour faire un test:
+- placer les fichiers source et target dans le répertoire test
+- faire make test
