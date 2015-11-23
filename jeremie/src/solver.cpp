@@ -152,6 +152,8 @@ void Solver::compute_state (int i, int j) {
             _states[index(i,j)].op = SUB;
     }
     
+    if (i == 0) // si on ne peut rien détruire, pas la peine de tester
+        return;    
     /* SIMPLE DESTRUCTION */
     tmp = 10 + get_cost(i-1,j);
     if (tmp < cost) {
@@ -160,22 +162,22 @@ void Solver::compute_state (int i, int j) {
         _states[index(i,j)].op = DEST + 1;
     }
     
+    if (i == 1) // si on ne peut pas faire de multidestruction, pas la peine de tester
+        return;
     /* MULTIPLE DESTRUCTION */
-    if (i > 1) {
-        int best_k = 2;
-        tmp = 15 + get_cost(i-2,j);
-        for (int k = 3 ; k <= i ; k++) {
-            int tmp2 = 15 + get_cost(i-k,j);
-            if (tmp2 <= tmp) {
-                tmp = tmp2;
-                best_k = k;
-            }
+    int best_k = 2;
+    tmp = 15 + get_cost(i-2,j);
+    for (int k = 3 ; k <= i ; k++) {
+        int tmp2 = 15 + get_cost(i-k,j);
+        if (tmp2 <= tmp) {
+            tmp = tmp2;
+            best_k = k;
         }
-        if (tmp < cost) {
-            cost = tmp;
-            _states[index(i,j)].cost = cost;
-            _states[index(i,j)].op = DEST + best_k;
-        }
+    }
+    if (tmp < cost) {
+        cost = tmp;
+        _states[index(i,j)].cost = cost;
+        _states[index(i,j)].op = DEST + best_k;
     }
 }
 

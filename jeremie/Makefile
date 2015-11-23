@@ -17,8 +17,7 @@ $(BINDIR)/applyPatch: $(SRCDIR)/applyPatch.c
 clean:
 	rm $(BINDIR)/*
 
-
-test: clean all
+test: all
 	cd $(TESTDIR) ; ../$(BINDIR)/computePatch source target > patch
 	cd $(TESTDIR) ; ../$(BINDIR)/applyPatch patch source > target2
 	cd $(TESTDIR) ; diff target target2
