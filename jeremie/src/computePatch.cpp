@@ -25,4 +25,6 @@ int main (int argc, char **argv) {
     cerr << "\nEcriture du patch..." << endl;
     solver.display_solution();
     std::cerr << "Ecriture terminee !" << std::endl;
+    
+    while(1);
 }

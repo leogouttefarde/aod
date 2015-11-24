@@ -1,14 +1,13 @@
 #include "file.hpp"
 
-//#define LIGHT
+#define LIGHT
 #ifdef LIGHT
-
 #include <iostream>
 #include <cstdlib>
 
 File::File (const char *path):
-    _curr_line(0),
     _nb_lines(0),
+    _curr_line(0),
     _line(),
     _file(path)
 {
@@ -51,8 +50,9 @@ void File::restart() {
     _file.seekg(0, std::ios::beg);
 }
 
-#else
 
+
+#else
 #include <iostream>
 #include <fstream>
 #include <cstdlib>

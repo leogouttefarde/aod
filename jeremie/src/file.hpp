@@ -2,9 +2,8 @@
 #define FILE_HPP_
 
 //version light : ne charge pas le fichier en memoire
-//#define LIGHT
+#define LIGHT
 #ifdef LIGHT
-
 #include <string>
 #include <fstream>
 
@@ -31,11 +30,9 @@ class File {
         /* sets the cursor at the beginning of the file */
         void restart();
 };
-
 #else
-
 #include <vector>
-#include<string>
+#include <string>
 
 /* classe pour parcourir un fichier, peu importe l'ordre */
 class File {
@@ -58,7 +55,6 @@ class File {
         /* TODO inutile ici, à supprimer */
         void restart(){};
 };
-
 #endif
 
 #endif
