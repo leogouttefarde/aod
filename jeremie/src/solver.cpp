@@ -2,17 +2,24 @@
 
 #include <iostream>
 #include <fstream>
+#include <list>
 
 /* structure utilisée seulement dans display_solution */
 struct Solution {
-    int _i, _j;
-    int  _op;
+    int _i, _j; // etat courant
+    int  _op;// operation a faire quand on est dans l'etat courant
     
-    Solution (int i, int j, int o):
+    Solution (int i=0, int j=0, int o=NONE):
         _i(i),
         _j(j),
         _op(o)
     {}
+    
+    void set (int i, int j, int o) {
+        _i = i;
+        _j = j;
+        _op = o;
+    }
 };
 
 Solver::Solver (const char *source_path, const char *target_path):
@@ -21,7 +28,6 @@ Solver::Solver (const char *source_path, const char *target_path):
     
     _states ( (_source.nb_lines()+1) * (_target.nb_lines()+1) )
 {
-//CHECK TAILLES ?
     std::cerr << std::endl;
     std::cerr << _source.nb_lines() << " lignes en entree, "
               << _target.nb_lines() <<  " lignes en sortie." << std::endl;
@@ -36,8 +42,9 @@ void Solver::display () const {
 }
 
 void Solver::display_solution () {
-    std::vector<Solution*> sol;
-
+    std::list<Solution> sol_list;
+    Solution  solution;
+    
     int i = _source.nb_lines(),
         j = _target.nb_lines();
 
@@ -46,17 +53,20 @@ void Solver::display_solution () {
         
         // on recule d'un cran dans le temps
         indices_from(i, j, op);
-        if (op != NONE) // si l'opération était utile, on la note
-            sol.push_back(new Solution(i, j, op));
+        if (op != NONE) {// si l'opération était utile, on la note
+            solution.set(i, j, op);
+            sol_list.push_front(solution);
+        }
     }
     
     _target.restart();
-    for (int iSol = sol.size()-1 ; iSol >= 0 ; iSol--) {
-        int i = sol[iSol]->_i,
-            j = sol[iSol]->_j;
+    for (std::list<Solution>::iterator iSol = sol_list.begin() ;
+                                        iSol != sol_list.end() ;
+                                        ++iSol) {
+        int i = iSol->_i,
+            j = iSol->_j;
         
-        
-        switch (sol[iSol]->_op) {
+        switch (iSol->_op) {
             case NONE:
             break;
             case ADD:
@@ -67,18 +77,16 @@ void Solver::display_solution () {
                 std::cout << *_target.get_line(j+1);
             break;
             default: //DEST
-                if (sol[iSol]->_op == DEST+1) // destruction simple
+                if (iSol->_op == DEST+1) // destruction simple
                     std::cout << "d " << i+1 << '\n';
                 else
-                    std::cout << "D " << i+1 << " " << sol[iSol]->_op - DEST << '\n';
+                    std::cout << "D " << i+1 << " "
+                                      << iSol->_op - DEST << '\n';
             break;
         }
         
-        indices_to (i, j, sol[iSol]->_op);
+        indices_to (i, j, iSol->_op);
     }
-    
-    for (int i = sol.size()-1 ; i >= 0 ; i--)
-        delete sol[i];
 }
 
 int Solver::get_min_cost () const {

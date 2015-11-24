@@ -14,9 +14,9 @@ int main (int argc, char **argv) {
     
     Solver solver(argv[1], argv[2]);
     
-    time_t beg =  time(NULL);
     cerr << "Calcul des couts..." << endl;
-    solver.compute_costs();
+    time_t beg =  time(NULL);
+    solver.compute_costs(true);
     cerr << "Calcul termine en " << time(NULL) - beg << " secondes !" << endl;
     cerr << "Cout total : " << solver.get_min_cost() << endl;
     

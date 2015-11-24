@@ -1,7 +1,7 @@
 SRCDIR = src
 BINDIR = bin
 TESTDIR = test
-#FLAGS = -Wall -Wextra
+#FLAGS = -Wall -Wextra -g
 FLAGS = -O3
 
 .PHONY: test
