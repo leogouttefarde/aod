@@ -10,7 +10,7 @@ File::File (const char *path):
     _file(path)
 {
     if (!_file.is_open()) {
-        std::cerr << "Impossible d'ouvrir " << path << std::endl;
+        std::cerr << "Impossible d'ouvrir '" << path << "'." << std::endl;
         exit(EXIT_FAILURE);
     }
     

@@ -15,7 +15,7 @@ $(BINDIR)/patchCost: $(SRCDIR)/patchCost.cpp $(SRCDIR)/file.cpp $(SRCDIR)/file.h
 	g++ $(FLAGS) $(SRCDIR)/patchCost.cpp $(SRCDIR)/file.cpp -o $(BINDIR)/patchCost
 
 $(BINDIR)/applyPatch: $(SRCDIR)/applyPatch.c
-	gcc $(FLAGS) $(SRCDIR)/applyPatch.c -o $(BINDIR)/applyPatch
+	gcc $(SRCDIR)/applyPatch.c -o $(BINDIR)/applyPatch
 
 clean:
 	rm -f $(BINDIR)/*
@@ -24,3 +24,4 @@ test: all
 	cd $(TESTDIR) ; ../$(BINDIR)/computePatch source target > patch
 	cd $(TESTDIR) ; ../$(BINDIR)/applyPatch patch source > target2
 	cd $(TESTDIR) ; diff target target2
+	rm $(TESTDIR)/target2

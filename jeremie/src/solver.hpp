@@ -31,32 +31,41 @@ class Solver {
     public:
         Solver (const char *source_path, const char *target_path);
         
-        void display ();
+        void compute_costs (bool disp=false);
+        
+        //for debugging purposes
+        void display () const;
         
         void display_solution ();
         
-        void write_solution ();
-            
-        int get_cost (int i, int j);
+        int get_min_cost () const;
+        
+        
         
     private:
+        
         /* expects i, j in range ;  >= 0 */
-        inline int index(int i, int j) {
+        inline int index(int i, int j) const {
             return j*(_source.nb_lines()+1) + i;
         }
         
-        void indices (int index, int &i, int &j) {
+        inline int get_cost (int i, int j) const {
+             return _states[index(i,j)].cost;
+        }
+        
+        void indices (int index, int &i, int &j) const {
             j = index / (_source.nb_lines()+1);//commence à 0
             i = index % (_source.nb_lines()+1);
         }
         
-        void compute_costs ();
-        void compute_state (int i, int j);
+        
+        void compute_sides (); //conditions aux bords
+        void compute_line (int j); //remplit la ligne j, en commencant à i=1
         
         /* calcule d'ou on vient sachant qu'on est dans (i,j) et venu en faisant l'opération op,
          * met le résultat dans i et j */
-        void indices_from (int &i, int &j, int op);
-        void indices_to (int &i, int &j, int op);
+        void indices_from (int &i, int &j, int op) const;
+        void indices_to (int &i, int &j, int op) const;
 };
 
 #endif
