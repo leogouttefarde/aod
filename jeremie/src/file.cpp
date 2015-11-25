@@ -1,85 +1,34 @@
 #include "file.hpp"
 
-//#define LIGHT
-#ifdef LIGHT
-#include <iostream>
-#include <cstdlib>
-
-File::File (const char *path):
-    _curr_line(0),
-    _nb_lines(0),
-    _line(),
-    _file(path)
-{
-    if (!_file.is_open()) {
-        std::cerr << "Impossible d'ouvrir '" << path << "'." << std::endl;
-        exit(EXIT_FAILURE);
-    }
-    
-    std::string line;
-    _nb_lines = 0;
-    while (std::getline(_file, line))
-        _nb_lines++;
-    
-    restart();
-}
-
-File::~File () {
-    _file.close();
-}
-
-std::string const* File::get_line (int index) {
-    if (index <= 0 || index < _curr_line || index > _nb_lines) {
-        std::cerr << "Erreur lecture : curr_line " << _curr_line << " index " << index << std::endl;
-        exit(EXIT_FAILURE);
-    }
-    
-    while (_curr_line != index) {
-        std::getline(_file, _line);
-        _curr_line++;
-    }
-
-    _line += '\n';
-    return &_line;
-}
-
-void File::restart() {
-    _curr_line = 0;
-    
-    _file.clear();
-    _file.seekg(0, std::ios::beg);
-}
-
-
-
-#else
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
 
 using namespace std;
 
-File::File (const char *path)
+File::File (const string &path):
+    _lines()
 {
-    ifstream file (path);
-    
+    /* first we try to open the file */
+    ifstream file (path.c_str());
     if (!file.is_open()) {
-        std::cerr << "Impossible d'ouvrir '" << path << "'." << std::endl;
+        cerr << "Impossible d'ouvrir '" << path << "'." << endl;
         exit(EXIT_FAILURE);
     }
     
-    std::string line;
+    /* then we count the lines */
+    string line;
     int i = 0;
     while (std::getline(file, line))
        i++;
+    _lines.resize(i, NULL);
     
-    _file.resize(i, NULL);
-    
+    /* then we load them */
     file.clear();
     file.seekg(0, ios::beg);
     i = 0;
     while (std::getline(file, line)) {
-        _file[i] = new string(line + '\n');
+        _lines[i] = new string(line + '\n');
         i++;
     }
     
@@ -87,11 +36,21 @@ File::File (const char *path)
 }
 
 File::~File () {
-    for (vector<string*>::iterator it = _file.begin() ; it != _file.end() ; ++it)
+    for (vector<string*>::iterator it = _lines.begin() ;
+                                   it != _lines.end() ;
+                                   ++it)
         delete *it;
 }
 
-std::string const* File::get_line (int index) const {
-    return _file[index-1];
+unsigned int File::nb_lines () const {
+    return _lines.size();
 }
-#endif
+
+std::string const* File::get_line (unsigned int index) const {
+    if (index == 0 || index > nb_lines()) {
+        cerr << "Out of range index : " << index << endl;
+        exit(EXIT_FAILURE);
+    }
+    
+    return _lines[index-1];
+}

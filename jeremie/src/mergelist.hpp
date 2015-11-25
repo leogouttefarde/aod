@@ -11,18 +11,18 @@ class MergeList {
         MergeElt<T> *_first_elt;
 
     public:
-        MergeList();
-        ~MergeList();
+        MergeList ();
+        ~MergeList ();
         
         MergeList<T>& operator= (const MergeList<T> &other);
 
         /* insertion en début de liste */
-        void push_front(const T &elt);
-        void push_front(const MergeList<T> &list);
+        void push_front (const T &elt);
+        void push_front (const MergeList<T> &list);
 
         void clear ();
         
-        std::list<T>* get_list() const;
+        std::list<T>* get_list () const;
 };
 
 #include "mergelist.tpp"

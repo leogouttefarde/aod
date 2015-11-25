@@ -15,7 +15,7 @@ int main (int argc, char **argv) {
     
     int cost = 0;
     File patch(argv[1]);
-    for (int i=1 ; i <= patch.nb_lines() ; ++i) {
+    for (unsigned int i=1 ; i <= patch.nb_lines() ; ++i) {
         std::string const* line = patch.get_line(i);
         
         if ( (*line)[0] == '+' || (*line)[0] == '=') {
