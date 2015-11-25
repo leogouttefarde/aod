@@ -3,7 +3,7 @@
 
 #include "mergeelt.hpp"
 
-#include <vector>
+#include <list>
 
 template<typename T>
 class MergeList {
@@ -22,7 +22,7 @@ class MergeList {
 
         void clear ();
         
-        std::vector<T>* get_elt_vect() const;
+        std::list<T>* get_list() const;
 };
 
 #include "mergelist.tpp"

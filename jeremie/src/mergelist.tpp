@@ -47,8 +47,8 @@ void MergeList<T>::push_front (const T &elt)
 }
 
 template<typename T>
-std::vector<T>* MergeList<T>::get_elt_vect() const {
-    std::vector<T> *tab = new std::vector<T>();
+std::list<T>* MergeList<T>::get_list() const {
+    std::list<T> *tab = new std::list<T>();
     
     MergeElt<T> const *elt = _first_elt;
     while (elt != NULL) {

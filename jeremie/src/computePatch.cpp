@@ -25,12 +25,13 @@ int main (int argc, char **argv) {
         return EXIT_SUCCESS;
     }
     
+    time_t beg =  time(NULL);
     Solver solver(argv[1], argv[2]);
     
     cerr << "Calcul des couts..." << endl;
-    time_t beg =  time(NULL);
+    
     solver.compute_costs(true);
-    cerr << "Calcul termine en moins de " << time(NULL) - beg + 1 << " secondes !" << endl;
+    cerr << "Calcul termine !" << endl;
     cerr << "Cout total : " << solver.get_min_cost() << endl;
     
     //solver.display();
@@ -38,7 +39,7 @@ int main (int argc, char **argv) {
     cerr << "\nEcriture du patch..." << endl;
     solver.display_solution();
     std::cerr << "Ecriture terminee !" << std::endl;
-
+    std::cerr << "Duree totale : moins de " << time(NULL) - beg + 1 << " secondes !" << std::endl;
 #ifdef TESTS
     MergeList<int> bob, albert;
     bob.push_front (1);

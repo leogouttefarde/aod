@@ -1,4 +1,4 @@
-#define OLD
+//#define OLD
 #ifdef OLD
     #include "solver.hpp"
 
@@ -224,18 +224,21 @@
     Solver::Solver (const char *source_path, const char *target_path):
         _source (source_path),
         _target (target_path),
-        _patch ()
+        _patch (NULL)
     {
         cerr << '\n' << _source.nb_lines() << " lignes en entree, "
                   << _target.nb_lines() <<  " lignes en sortie." << endl;
     }
 
+    Solver::~Solver () {
+        delete _patch;
+    }
+
     void Solver::display_solution () {
         int i = 0, j = 0;
         
-        vector<Op> *ops = _patch.get_elt_vect();
         _target.restart();
-        for (vector<Op>::reverse_iterator it = ops->rbegin() ; it != ops->rend() ; ++it) {
+        for (list<Op>::reverse_iterator it = _patch->rbegin() ; it != _patch->rend() ; ++it) {
             switch (*it) {
                 case NONE:
                 break;
@@ -255,7 +258,6 @@
             
             update_coords (i, j, *it);
         }
-        delete ops;
     }
 
     int Solver::get_min_cost () const {
@@ -291,7 +293,7 @@
             }
         }
         
-        _patch = (*curr_line)[_source.nb_lines()].ops;
+        _patch = (*curr_line)[_source.nb_lines()].ops.get_list();
         _patch_cost = (*curr_line)[_source.nb_lines()].cost;
     }
 

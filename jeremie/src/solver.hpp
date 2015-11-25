@@ -1,7 +1,7 @@
 #ifndef SOLVER_HPP__
 #define SOLVER_HPP__
 
-#define OLD
+//#define OLD
 #ifdef OLD
     #include "file.hpp"
 
@@ -87,6 +87,7 @@
 
     #include <string>
     #include <list>
+    #include <vector>
 
     /* enumeration qui represente une operation (les operations seront des int)
      * si op > DEST, alors l'operation est la destruction de (op - DEST) lignes
@@ -109,14 +110,15 @@
         private:
             File          _source,
                           _target;
-            MergeList<Op> _patch; /* patch optimal, calculé dans compute_costs*/
+            std::list<Op> *_patch; /* patch optimal, calculé dans compute_costs*/
             int           _patch_cost; /* cout du patch optimal */
             
         public:
             /* si l'un des chemins est invalide
              * quitte en affichant un message d'erreur */
             Solver (const char *source_path, const char *target_path);
-            
+            ~Solver();
+
             /* calcule le patch, l'écrit dans ops'*/
             void compute_costs (bool disp=false);
             
