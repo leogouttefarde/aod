@@ -1,8 +1,8 @@
 SRCDIR = src
 BINDIR = bin
 TESTDIR = test
-#FLAGS = -Wall -Wextra -g
-FLAGS = -O3
+FLAGS = -Wall -Wextra -g
+#FLAGS = -O3
 
 .PHONY: test
 
@@ -21,7 +21,7 @@ clean:
 	rm -f $(BINDIR)/*
 
 test: all
-	cd $(TESTDIR) ; ../$(BINDIR)/computePatch source target > patch
-	cd $(TESTDIR) ; ../$(BINDIR)/applyPatch patch source > target2
-	cd $(TESTDIR) ; diff target target2
-	rm $(TESTDIR)/target2
+	cd $(TESTDIR) ; valgrind --leak-check=full ../$(BINDIR)/computePatch source target > patch
+#	cd $(TESTDIR) ; ../$(BINDIR)/applyPatch patch source > target2
+#	cd $(TESTDIR) ; diff target target2
+	rm -f $(TESTDIR)/target2

@@ -6,8 +6,8 @@
 #include <cstdlib>
 
 File::File (const char *path):
-    _nb_lines(0),
     _curr_line(0),
+    _nb_lines(0),
     _line(),
     _file(path)
 {
