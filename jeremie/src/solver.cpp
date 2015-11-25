@@ -230,11 +230,12 @@
                   << _target.nb_lines() <<  " lignes en sortie." << endl;
     }
 
-    void Solver::display_solution () const {
+    void Solver::display_solution () {
         int i = 0, j = 0;
-        for (list<Op>::const_iterator it = _patch.begin() ;
-                                      it != _patch.end()  ;
-                                      ++it) {
+        
+        vector<Op> *ops = _patch.get_elt_vect();
+        _target.restart();
+        for (vector<Op>::reverse_iterator it = ops->rbegin() ; it != ops->rend() ; ++it) {
             switch (*it) {
                 case NONE:
                 break;
@@ -253,7 +254,8 @@
             }
             
             update_coords (i, j, *it);
-         }
+        }
+        delete ops;
     }
 
     int Solver::get_min_cost () const {
@@ -268,28 +270,20 @@
         /* initialisation de la ligne j=0 */
         line1[0].cost = 0;
         line1[1].cost = 10;
-        line1[1].ops.push_back(DEST+1);
+        line1[1].ops.push_front(DEST+1);
         for (int i = _source.nb_lines() ; i > 1 ; --i) {
             line1[i].cost = 15;
-            line1[i].ops.push_back(DEST+i);
+            line1[i].ops.push_front(DEST+i);
         }
         
         vector<State> *curr_line = &line1, *prev_line = &line2;
         
-        for (int i = 0 ; i <= _source.nb_lines() ; ++i)
-            cerr << (*curr_line)[i].cost << " ";
-        cerr << std::endl;
-             
         int step = _target.nb_lines() / 10; //pour l'affichage de l'avancement
         if (step == 0)
             step = 1;
         for (int j = 1 ; j <= _target.nb_lines() ; ++j) {
             std::swap (prev_line, curr_line);
             compute_line (*curr_line, *prev_line, j);
-            
-            for (int i = 0 ; i <= _source.nb_lines() ; ++i)
-                cerr << (*curr_line)[i].cost << " ";
-             cerr << std::endl;
              
             if (disp && j % step == 0) {
                 int percentage = 10*(j+1) / (_target.nb_lines()) * 10;
@@ -304,53 +298,47 @@
     void Solver::compute_line (vector<State> &curr_line, vector<State> &prev_line,
                                int j) {
         string const *tar_j = _target.get_line(j);
-        
+
         _source.restart();
         int best_k;//utilisé pour la multidestruction
         for (int i = 0 ; i <= _source.nb_lines() ; ++i) {
-            string const *src_i  = _source.get_line(i);
-            
             /* ADD */
             Op op = ADD;
             int cost = 10 + tar_j->length() + prev_line[i].cost;
             
-            if (i == 0) // si on ne peut faire qu'une addition, on  passe au i suiv.
-                continue;
+            if (i > 0) {//si on peut faire autre chose qu'un ajout
+                string const *src_i  = _source.get_line(i);
                 
-            /* SUB */
-            int tmp = prev_line[i-1].cost;
-            if (*src_i != *tar_j)
-                tmp += 10 + tar_j->length();
-            if (tmp < cost) { // si sub est meilleur que les precedents
-                cost = tmp;
+                /* SUB */
+                int tmp = prev_line[i-1].cost;
+                if (*src_i != *tar_j)
+                    tmp += 10 + tar_j->length();
+                if (tmp < cost) { // si sub est meilleur que les precedents
+                    cost = tmp;
+                    op = (cost == prev_line[i-1].cost) ? NONE : SUB;
+                }
                 
-                if (cost == prev_line[i-1].cost)
-                    op = NONE;
-                else
-                    op = SUB;
+                /* SIMPLE DESTRUCTION */
+                tmp = 10 + curr_line[i-1].cost;
+                if (tmp < cost) {  // si simple dest est meilleur que les precedents
+                    cost = tmp;
+                    op = DEST + 1;
+                }
+                
+                if (i > 1) {// si on peut faire une multi destruction
+                    /* MULTIPLE DESTRUCTION */
+                    if (i == 2)// initialisation de best_k lors de la premiere multidest possible
+                        best_k = 2;
+                    if (15 + curr_line[i-2].cost < 15 + curr_line[i-best_k].cost)
+                        best_k = 2;
+                    tmp = 15 + curr_line[i-best_k].cost;
+                    if (tmp < cost) {
+                        cost = tmp;
+                        op = DEST + best_k;
+                    }
+                    best_k++;// comme i augmente, pour stabiliser i-best_k on incremente best_ks
+                }
             }
-            
-            /* SIMPLE DESTRUCTION */
-            tmp = 10 + curr_line[i-1].cost;
-            if (tmp < cost) {  // si simple dest est meilleur que les precedents
-                cost = tmp;
-                op = DEST + 1;
-            }
-            
-            if (i == 1)// si on ne peut pas faire de multidestruction, on teste pas
-                continue;
-           
-            /* MULTIPLE DESTRUCTION */
-            if (i == 2)// initialisation de best_k lors de la premiere multidest possible
-                best_k = 2;
-            if (15 + curr_line[i-2].cost < 15 + curr_line[i-best_k].cost)
-                best_k = 2;
-            tmp = 15 + curr_line[i-best_k].cost;
-            if (tmp < cost) {
-                cost = tmp;
-                op = DEST + best_k;
-            }
-            best_k++;// comme i augmente, pour stabiliser i-best_k on incremente best_ks
             
             /* ici cost est le cout optimal et op l'operation a faire */
             curr_line[i].cost = cost;
@@ -361,7 +349,7 @@
                 curr_line[i].ops = curr_line[i-di].ops;
             else
                 curr_line[i].ops = prev_line[i-di].ops;
-            curr_line[i].ops.push_back(op);
+            curr_line[i].ops.push_front(op);
         }
     }
 

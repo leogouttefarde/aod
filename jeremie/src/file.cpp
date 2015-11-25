@@ -1,6 +1,6 @@
 #include "file.hpp"
 
-#define LIGHT
+//#define LIGHT
 #ifdef LIGHT
 #include <iostream>
 #include <cstdlib>
@@ -30,7 +30,7 @@ File::~File () {
 
 std::string const* File::get_line (int index) {
     if (index <= 0 || index < _curr_line || index > _nb_lines) {
-        std::cerr << "Erreur lecture : " << _curr_line << " ; " << index << std::endl;
+        std::cerr << "Erreur lecture : curr_line " << _curr_line << " index " << index << std::endl;
         exit(EXIT_FAILURE);
     }
     

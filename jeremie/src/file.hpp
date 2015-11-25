@@ -2,7 +2,7 @@
 #define FILE_HPP_
 
 //version light : ne charge pas le fichier en memoire
-#define LIGHT
+//#define LIGHT
 #ifdef LIGHT
 #include <string>
 #include <fstream>

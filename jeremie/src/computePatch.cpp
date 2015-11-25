@@ -9,18 +9,28 @@
 
 using namespace std;
 
+#ifdef TESTS
+template <typename T>
+void printlist (const MergeList<T> &list) {
+    vector<T> *vec = list.get_elt_vect();
+    for (vector<int>::reverse_iterator it = vec->rbegin() ; it != vec->rend() ; ++it)
+        cerr << *it << endl;
+    delete vec;
+}
+#endif
+
 int main (int argc, char **argv) {
     if (argc < 3) {
         cerr << "Usage : " << argv[0] << " <originalFile> <patchedFile> " << endl;
         return EXIT_SUCCESS;
     }
-    /*
+    
     Solver solver(argv[1], argv[2]);
     
     cerr << "Calcul des couts..." << endl;
     time_t beg =  time(NULL);
     solver.compute_costs(true);
-    cerr << "Calcul termine en " << time(NULL) - beg << " secondes !" << endl;
+    cerr << "Calcul termine en moins de " << time(NULL) - beg + 1 << " secondes !" << endl;
     cerr << "Cout total : " << solver.get_min_cost() << endl;
     
     //solver.display();
@@ -28,18 +38,31 @@ int main (int argc, char **argv) {
     cerr << "\nEcriture du patch..." << endl;
     solver.display_solution();
     std::cerr << "Ecriture terminee !" << std::endl;
+
+#ifdef TESTS
+    MergeList<int> bob, albert;
+    bob.push_front (1);
+    bob.push_front (2);
+    bob.push_front (3);
+    albert.push_front (4);
     
-    while(1);*/
-    
-    MergeList<int> bob;
-    bob.insert (3);
-    
-    vector<int> *vec = bob.get_elt_vect();
-    
-    for (unsigned int i = 0 ; i < vec->size() ; ++i)
-        cerr << (*vec)[i] << endl;
-    
-    delete vec;
+    cerr << "bob : ";
+    printlist(bob);
+
+    cerr << "albert : ";
+    printlist(albert);
     
     bob.clear();
+    bob.push_front(5);
+    cerr << "bob : ";
+    printlist(bob);
+
+    albert = bob;
+    albert.push_front(6);
+    bob.clear();
+    cerr << "albert : ";
+    printlist(albert);
+        cerr << "bob : ";
+    printlist(bob);
+#endif
 }

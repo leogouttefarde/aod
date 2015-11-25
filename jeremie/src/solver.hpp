@@ -83,6 +83,7 @@
     };
 #else
     #include "file.hpp"
+    #include "mergelist.hpp"
 
     #include <string>
     #include <list>
@@ -96,7 +97,7 @@
     /* structure utilisée pour représenter un etat */
     struct State {
         int            cost; // cout optimal pour arriver a cet etat
-        std::list<Op>  ops; /* operations a faire pour arriver ici */
+        MergeList<Op>  ops; /* operations a faire pour arriver ici */
         
         State (int c=-1):
             cost(c),
@@ -108,7 +109,7 @@
         private:
             File          _source,
                           _target;
-            std::list<Op> _patch; /* patch optimal, calculé dans compute_costs*/
+            MergeList<Op> _patch; /* patch optimal, calculé dans compute_costs*/
             int           _patch_cost; /* cout du patch optimal */
             
         public:
@@ -121,7 +122,7 @@
             
             /* affiche le patch optimal sur la sortie standard
              * il faut avoir appelé compute_costs() avant */
-            void display_solution () const;
+            void display_solution ();
             
             int get_min_cost () const;
             
