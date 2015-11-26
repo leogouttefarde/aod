@@ -18,6 +18,6 @@ if [ $# -ge 2 ]; then
 		echo "Patch valide"
 	fi;
 
-	rm -rf $PATCH $PATCHED
+	rm -f $PATCH $PATCHED
 fi;
 

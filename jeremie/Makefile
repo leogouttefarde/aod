@@ -68,6 +68,8 @@ clean:
 run: binary
 	./bin/computePatchOpt benchmark/benchmark_06/{source,target}
 
+check:
+	./test/check.sh benchmark/benchmark_06/{source,target}
 
 test: binary
 	cd $(TESTDIR) ; ../$(BINDIR)/computePatchOpt source target > patch
@@ -78,4 +80,4 @@ test: binary
 	rm -f $(TESTDIR)/target2
 
 
-.PHONY: all doc binary report test
+.PHONY: all doc binary report test check
