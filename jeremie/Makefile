@@ -27,6 +27,7 @@ SRCDIR=$(REFDIR)/src
 BINDIR=$(REFDIR)/bin
 DOCDIR=$(REFDIR)/doc
 REPORTDIR=$(REFDIR)/rapport
+TESTDIR=$(REFDIR)/test
 
 LATEXSOURCE=$(wildcard $(REPORTDIR)/*.tex)
 CSOURCE=$(wildcard $(SRCDIR)/applyPatch.c)
@@ -66,6 +67,7 @@ clean:
 
 run: binary
 	./bin/computePatchOpt benchmark/benchmark_06/{source,target}
+
 
 test: binary
 	cd $(TESTDIR) ; ../$(BINDIR)/computePatchOpt source target > patch

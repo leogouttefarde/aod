@@ -21,7 +21,7 @@ int main (int argc, char **argv) {
             return EXIT_FAILURE;
         }
 
-        const time_t START = time(NULL);
+        const clock_t start = clock();
 
         #ifdef PAPI
         long long counters[3];
@@ -50,9 +50,13 @@ int main (int argc, char **argv) {
 
         solver.display_solution();
 
+        const clock_t end = clock();
+        const clock_t diff = end - start;
+
+
         cerr << endl << "Ecriture terminee !" << endl;
-        cerr << "Duree totale : " << time(NULL) - START
-        	 << " secondes !" << endl;
+        cerr << "Duree totale : " << (diff * 1000) / CLOCKS_PER_SEC
+        	 << " millisecondes !" << endl;
 
 
         #ifdef PAPI
