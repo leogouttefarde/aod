@@ -11,7 +11,8 @@ using namespace std;
 
 Solver::Solver (const string& src_path, const string& tar_path):
     _source (src_path),
-    _target (tar_path)
+    _target (tar_path),
+    _states (NULL)
 {
     _states = (State*)calloc((_source.nb_lines()+1) * (_target.nb_lines()+1),
                                 sizeof(State));

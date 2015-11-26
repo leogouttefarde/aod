@@ -1,24 +1,55 @@
-SRCDIR = src
-BINDIR = bin
-TESTDIR = test
-#FLAGS = -Wall -Wextra -pedantic -ansi -Weffc++ -g
-FLAGS = -O3
+CC=gcc
+CXX=g++
+LATEXC=pdflatex
+DOCC=doxygen
+# CFLAGS=-g -Wall
+CFLAGS= -Wall -Wextra -O3
+# CXXFLAGS= -Wall -Wextra -pedantic -ansi -Weffc++ -g
+CXXFLAGS= -Wall -Wextra -pedantic -ansi -Werror -O3
 
-.PHONY: test
+REFDIR=.
+SRCDIR=$(REFDIR)/src
+BINDIR=$(REFDIR)/bin
+DOCDIR=$(REFDIR)/doc
+REPORTDIR=$(REFDIR)/rapport
 
-all: $(BINDIR)/computePatch $(BINDIR)/applyPatch $(BINDIR)/patchCost
+LATEXSOURCE=$(wildcard $(REPORTDIR)/*.tex)
+CSOURCE=$(wildcard $(SRCDIR)/applyPatch.c)
+CPPSOURCES=$(wildcard $(SRCDIR)/*.cpp)
+COMPUTEPATCH=$(SRCDIR)/computePatch.cpp $(SRCDIR)/file.cpp $(SRCDIR)/solver.cpp
+PDF=$(LATEXSOURCE:.tex=.pdf)
 
-$(BINDIR)/computePatch: $(SRCDIR)/computePatch.cpp $(SRCDIR)/file.cpp $(SRCDIR)/file.hpp $(SRCDIR)/solver.cpp $(SRCDIR)/solver.hpp
-	g++ $(FLAGS) $(SRCDIR)/computePatch.cpp $(SRCDIR)/file.cpp $(SRCDIR)/solver.cpp -o $(BINDIR)/computePatch
+
+all: binary report doc 
+
+
+$(BINDIR)/applyPatch: $(CSOURCE)
+	$(CC) $(CFLAGS)  $^ -o $@
+
+$(BINDIR)/computePatchOpt: $(COMPUTEPATCH)
+	$(CXX) $(CXXFLAGS) $^ -o $@
 
 $(BINDIR)/patchCost: $(SRCDIR)/patchCost.cpp $(SRCDIR)/file.cpp $(SRCDIR)/file.hpp
-	g++ $(FLAGS) $(SRCDIR)/patchCost.cpp $(SRCDIR)/file.cpp -o $(BINDIR)/patchCost
+	$(CXX) $(CXXFLAGS) $^ -o $@
 
-$(BINDIR)/applyPatch: $(SRCDIR)/applyPatch.c
-	gcc $(SRCDIR)/applyPatch.c -o $(BINDIR)/applyPatch
+%.pdf: $(LATEXSOURCE)
+	$(LATEXC) -output-directory $(REPORTDIR) $^ 
+
+$(DOCDIR)/index.html: $(SRCDIR)/Doxyfile $(CSOURCE) 
+	$(DOCC) $(SRCDIR)/Doxyfile
+
+binary: $(BINDIR)/applyPatch $(BINDIR)/computePatchOpt $(BINDIR)/patchCost
+
+report: $(PDF) 
+
+doc: $(DOCDIR)/index.html
 
 clean:
-	rm -f $(BINDIR)/*
+	rm -f $(DOCDIR)/search/*
+	if [ -d "$(DOCDIR)/search" ]; then	rmdir --ignore-fail-on-non-empty $(DOCDIR)/search;	fi
+	rm -f $(DOCDIR)/* $(BINDIR)/* $(REPORTDIR)/*.{aux,log} $(REPORTDIR)/rapport.pdf
+
+
 
 test: all
 	cd $(TESTDIR) ; ../$(BINDIR)/computePatch source target > patch
@@ -27,3 +58,6 @@ test: all
 	cd $(TESTDIR) ; ../$(BINDIR)/applyPatch patch source > target2
 	cd $(TESTDIR) ; diff target target2
 	rm -f $(TESTDIR)/target2
+
+
+.PHONY: all doc binary report test
