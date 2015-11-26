@@ -19,16 +19,19 @@
             for (unsigned int i = 0 ; i <= _source.nb_lines() ; ++j)
                 std::cerr << _states[index(i,j)].cost << " ";
             
-            std::cerr << std::endl;
+            std::cerr << "\n";
         }
+        std::cerr << std::endl;
     }
 
     void Solver::display_solution () {
         std::list<Op> op_list;
         
+        /* first we begin at the desired state
+         * and we make our way to the state (0,0)
+         * storing every operation we go through */
         int i = _source.nb_lines(),
             j = _target.nb_lines();
-
         while (i != 0 || j != 0) {
             int op = _states[index(i,j)].op;
             op_list.push_front(op);
@@ -39,7 +42,8 @@
             j -= dj;
         }
         
-        /* ici on part de i = 0 et j = 0 */
+        /* then we begin from (0,0) and apply
+         * the operations in the right order */
         for (std::list<Op>::iterator it = op_list.begin() ;
                                      it != op_list.end() ;
                                      ++it) {
@@ -73,7 +77,7 @@
         compute_sides ();
         
         //calcul du centre
-        int step = _target.nb_lines() / 10; //pour l'affichage de l'avancement
+        int step = _target.nb_lines() / 10; //for progression displaying
         if (step == 0)
             step = 1;
         for (unsigned int j = 1 ; j <= _target.nb_lines() ; ++j) {

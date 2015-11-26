@@ -6,7 +6,7 @@ FLAGS = -O2
 
 .PHONY: test
 
-all: clean $(BINDIR)/computePatch $(BINDIR)/applyPatch $(BINDIR)/patchCost
+all: $(BINDIR)/computePatch $(BINDIR)/applyPatch $(BINDIR)/patchCost
 
 $(BINDIR)/computePatch: $(SRCDIR)/computePatch.cpp $(SRCDIR)/file.cpp $(SRCDIR)/file.hpp $(SRCDIR)/solver.cpp $(SRCDIR)/solver.hpp
 	g++ $(FLAGS) $(SRCDIR)/computePatch.cpp $(SRCDIR)/file.cpp $(SRCDIR)/solver.cpp -o $(BINDIR)/computePatch
