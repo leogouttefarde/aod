@@ -2,7 +2,11 @@ CC=gcc
 CXX=g++
 LATEXC=pdflatex
 DOCC=doxygen
-DEBUG=0
+
+# If DEBUG not manually defined, define it here
+ifndef DEBUG
+	DEBUG=0
+endif
 
 CFLAGS= -Wall
 CXXFLAGS= -Wall -Wextra -ansi -Werror
@@ -60,10 +64,10 @@ clean:
 	if [ -d "$(DOCDIR)/search" ]; then	rmdir --ignore-fail-on-non-empty $(DOCDIR)/search;	fi
 	rm -f $(DOCDIR)/* $(BINDIR)/* $(REPORTDIR)/*.{aux,log} $(REPORTDIR)/rapport.pdf
 
-run:
+run: binary
 	./bin/computePatchOpt benchmark/benchmark_06/{source,target}
 
-test: all
+test: binary
 	cd $(TESTDIR) ; ../$(BINDIR)/computePatchOpt source target > patch
 #	cd $(TESTDIR) ; valgrind --tool=cachegrind ../$(BINDIR)/computePatchOpt source target > patch
 #	cd $(TESTDIR) ; valgrind --leak-check=full ../$(BINDIR)/computePatchOpt source target > patch

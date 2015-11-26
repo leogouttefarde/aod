@@ -50,9 +50,9 @@ int main (int argc, char **argv) {
 
         solver.display_solution();
 
-        cerr << "Ecriture terminee !" << endl << endl;
+        cerr << endl << "Ecriture terminee !" << endl;
         cerr << "Duree totale : " << time(NULL) - START
-        	 << " secondes !" << endl << endl;
+        	 << " secondes !" << endl;
 
 
         #ifdef PAPI
