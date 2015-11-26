@@ -20,6 +20,14 @@ Solver::Solver (const string& src_path, const string& tar_path):
               << _target.nb_lines() <<  " lignes en sortie." << endl;
 }
 
+Solver::~Solver ()
+{
+    if (_states) {
+        free(_states);
+        _states = NULL;
+    }
+}
+
 void Solver::display () const {
     for (unsigned int j = 0 ; j <= _target.nb_lines() ; ++j) {
         for (unsigned int i = 0 ; i <= _source.nb_lines() ; ++j)

@@ -45,12 +45,18 @@ class Solver {
         State *_states;
 
     public:
+
        /**
         * Constructor. Load the two files in memory.
         * @throws runtime_error if one of two paths is invalid.
         */
         Solver (const string &src_path, const string &tar_path);
-        
+
+       /**
+        * Destructor
+        */
+        ~Solver ();
+
        /**
         * Computes every cost. This method should be called first.
         * @param disp   Whether or not a progression indcator is shown.
