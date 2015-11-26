@@ -1,22 +1,24 @@
 #include "file.hpp"
-
 #include <iostream>
 #include <string>
 #include <cstdlib>
 
 using namespace std;
 
-/* suppose le patch correct */
+
+/* Suppose le patch correct */
 int main (int argc, char **argv) {
+
     if (argc < 2) {
         cout << "Usage : " << argv[0] << " <patch>" << endl;
-        return EXIT_SUCCESS;
+        return EXIT_FAILURE;
     }
-    
-    int cost = 0;
+
     File patch(argv[1]);
-    for (unsigned int i=1 ; i <= patch.nb_lines() ; ++i) {
-        std::string const* line = patch.get_line(i);
+    int cost = 0;
+
+    for (unsigned int i = 1; i <= patch.nb_lines(); ++i) {
+        string const* line = patch.get_line(i);
         
         if ( (*line)[0] == '+' || (*line)[0] == '=') {
             i++;
@@ -29,4 +31,6 @@ int main (int argc, char **argv) {
     }
     
     cout << "Le cout de ce patch est " << cost << "." << endl;
+
+    return EXIT_SUCCESS;
 }
