@@ -8,27 +8,15 @@ using namespace std;
 File::File (const string &path):
     _lines(0, NULL)
 {
-    /* first we try to open the file */
+    /* First, open the file */
     ifstream file (path.c_str());
     if (!file.is_open())
         throw std::invalid_argument("Impossible d'ouvrir : " + path);
-    
-    /* then we count the lines */
+
     string line;
-    int i = 0;
     while (std::getline(file, line))
-       i++;
-    _lines.resize(i, NULL);
-    
-    /* then we load them */
-    file.clear();
-    file.seekg(0, ios::beg);
-    i = 0;
-    while (std::getline(file, line)) {
-        _lines[i] = new string(line + '\n');
-        i++;
-    }
-    
+        _lines.push_back(new string(line + '\n'));
+
     file.close();
 }
 

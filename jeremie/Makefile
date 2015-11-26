@@ -2,7 +2,7 @@ SRCDIR = src
 BINDIR = bin
 TESTDIR = test
 #FLAGS = -Wall -Wextra -pedantic -ansi -Weffc++ -g
-FLAGS = -O2
+FLAGS = -O3
 
 .PHONY: test
 
