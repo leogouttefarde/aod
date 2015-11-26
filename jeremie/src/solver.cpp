@@ -1,6 +1,3 @@
-#define MEMORY_LOAD
-#ifdef MEMORY_LOAD
-
 #include "solver.hpp"
 #include <iostream>
 #include <list>
@@ -12,21 +9,12 @@ using namespace std;
 Solver::Solver (const string& src_path, const string& tar_path):
     _source (src_path),
     _target (tar_path),
-    _states (NULL)
+    _states ()
 {
-    _states = (State*)calloc((_source.nb_lines()+1) * (_target.nb_lines()+1),
-                                sizeof(State));
+    _states.resize( (_source.nb_lines()+1) * (_target.nb_lines()+1) );
 
     cerr << endl << _source.nb_lines() << " lignes en entree, "
               << _target.nb_lines() <<  " lignes en sortie." << endl;
-}
-
-Solver::~Solver ()
-{
-    if (_states) {
-        free(_states);
-        _states = NULL;
-    }
 }
 
 void Solver::display () const {
@@ -197,166 +185,3 @@ void Solver::next_indices (int &i, int &j, Op op) const {
     }
 }
 
-#else
-
-#include "solver.hpp"
-
-#include <iostream>
-#include <fstream>
-#include <list>
-#include <algorithm>
-
-using namespace std;
-
-Solver::Solver (const char *source_path, const char *target_path):
-    _source (source_path),
-    _target (target_path),
-    _patch (NULL)
-{
-    cerr << endl << _source.nb_lines() << " lignes en entree, "
-              << _target.nb_lines() <<  " lignes en sortie." << endl;
-}
-
-Solver::~Solver () {
-    delete _patch;
-}
-
-void Solver::display_solution () {
-    int i = 0, j = 0;
-    
-    for (list<Op>::reverse_iterator it = _patch->rbegin() ; it != _patch->rend() ; ++it) {
-        switch (*it) {
-            case NONE:
-            break;
-            case ADD:
-                cout << "+ " << i << endl << *_target.get_line(j+1);
-            break;
-            case SUB:
-                cout << "= " << i+1 << endl << *_target.get_line(j+1);
-            break;
-            default: //DEST
-                if (*it == DEST+1) // destruction simple
-                    cout << "d " << i+1 << endl;
-                else
-                    cout << "D " << i+1 << " " << *it - DEST << endl;
-            break;
-        }
-        
-        update_coords (i, j, *it);
-    }
-}
-
-int Solver::get_min_cost () const {
-    return _patch_cost;
-}
-
-void Solver::compute_costs (bool disp){
-    /* allocation des deux lignes */
-    vector<State> line1(_source.nb_lines()+1),
-                  line2(_source.nb_lines()+1);
-    
-    /* initialisation de la ligne j=0 */
-    line1[0].cost = 0;
-    line1[1].cost = 10;
-    line1[1].ops.push_front(DEST+1);
-    for (int i = _source.nb_lines() ; i > 1 ; --i) {
-        line1[i].cost = 15;
-        line1[i].ops.push_front(DEST+i);
-    }
-    
-    vector<State> *curr_line = &line1, *prev_line = &line2;
-    
-    int step = _target.nb_lines() / 10; //pour l'affichage de l'avancement
-    if (step == 0)
-        step = 1;
-    for (unsigned int j = 1 ; j <= _target.nb_lines() ; ++j) {
-        std::swap (prev_line, curr_line);
-        compute_line (*curr_line, *prev_line, j);
-         
-        if (disp && j % step == 0) {
-            int percentage = 10*(j+1) / (_target.nb_lines()) * 10;
-            cerr << percentage << " %" << endl;
-        }
-    }
-    
-    _patch = (*curr_line)[_source.nb_lines()].ops.get_list();
-    _patch_cost = (*curr_line)[_source.nb_lines()].cost;
-}
-
-void Solver::compute_line (vector<State> &curr_line, vector<State> &prev_line,
-                           int j) {
-    string const *tar_j = _target.get_line(j);
-
-    int best_k;//utilisé pour la multidestruction
-    for (unsigned int i = 0 ; i <= _source.nb_lines() ; ++i) {
-        /* ADD */
-        Op op = ADD;
-        int cost = 10 + tar_j->length() + prev_line[i].cost;
-        
-        if (i > 0) {//si on peut faire autre chose qu'un ajout
-            string const *src_i  = _source.get_line(i);
-            
-            /* SUB */
-            int tmp = prev_line[i-1].cost;
-            if (*src_i != *tar_j)
-                tmp += 10 + tar_j->length();
-            if (tmp < cost) { // si sub est meilleur que les precedents
-                cost = tmp;
-                op = (cost == prev_line[i-1].cost) ? NONE : SUB;
-            }
-            
-            /* SIMPLE DESTRUCTION */
-            tmp = 10 + curr_line[i-1].cost;
-            if (tmp < cost) {  // si simple dest est meilleur que les precedents
-                cost = tmp;
-                op = DEST + 1;
-            }
-            
-            if (i > 1) {// si on peut faire une multi destruction
-                /* MULTIPLE DESTRUCTION */
-                if (i == 2)// initialisation de best_k lors de la premiere multidest possible
-                    best_k = 2;
-                if (15 + curr_line[i-2].cost < 15 + curr_line[i-best_k].cost)
-                    best_k = 2;
-                tmp = 15 + curr_line[i-best_k].cost;
-                if (tmp < cost) {
-                    cost = tmp;
-                    op = DEST + best_k;
-                }
-                best_k++;// comme i augmente, pour stabiliser i-best_k on incremente best_ks
-            }
-        }
-        
-        /* ici cost est le cout optimal et op l'operation a faire */
-        curr_line[i].cost = cost;
-        
-        int di=0, dj=0;
-        update_coords (di, dj, op);
-        if (dj == 0) // si le meilleur cout vient d'une destruction
-            curr_line[i].ops = curr_line[i-di].ops;
-        else
-            curr_line[i].ops = prev_line[i-di].ops;
-        curr_line[i].ops.push_front(op);
-    }
-}
-
-void Solver::update_coords (int &i, int &j, Op op) const {
-    switch (op) {
-        case NONE:
-            i++;
-            j++;
-        break;
-        case ADD:
-            j++;
-        break;
-        case SUB:
-            i++;
-            j++;
-        break;
-        default: //DEST
-            i += op - DEST;
-        break;
-    }
-}
-
-#endif

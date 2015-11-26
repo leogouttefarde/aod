@@ -14,12 +14,9 @@ using namespace std;
 
 int main (int argc, char **argv) {
     try {
-        if (argc < 3) {
-            cerr << "Usage : " << argv[0] << " <originalFile> <patchedFile>"
-                 << endl;
-
-            return EXIT_FAILURE;
-        }
+        if (argc < 3)
+            throw runtime_error ("Usage : " + string(argv[0])
+                                            + " <originalFile> <patchedFile>");
 
         const clock_t start = clock();
 
@@ -44,8 +41,6 @@ int main (int argc, char **argv) {
         cerr << "Calcul termine !" << endl;
         cerr << "Cout total : " << solver.get_min_cost() << endl;
 
-        // solver.display();
-
         cerr << endl << "Ecriture du patch..." << endl;
 
         solver.display_solution();
@@ -53,10 +48,10 @@ int main (int argc, char **argv) {
         const clock_t end = clock();
         const clock_t diff = end - start;
 
-
-        cerr << endl << "Ecriture terminee !" << endl;
+        cerr << "Ecriture terminee !" << endl << endl;
+        
         cerr << "Duree totale : " << (diff * 1000) / CLOCKS_PER_SEC
-        	 << " millisecondes !" << endl;
+             << " millisecondes !" << endl;
 
 
         #ifdef PAPI
@@ -67,12 +62,11 @@ int main (int argc, char **argv) {
             (double)counters[1] / (double)counters[2],
             counters[0] );
         #endif
-
-
-        return EXIT_SUCCESS;
     }
     catch (const std::exception &excep) {
         cerr << endl << "Erreur : " << excep.what() << endl << endl;
         return EXIT_FAILURE;
     }
+    
+    return EXIT_SUCCESS;
 }

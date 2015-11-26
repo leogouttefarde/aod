@@ -4,16 +4,13 @@
 #include <vector>
 #include <string>
 
-using namespace std;
-
-
 /**
  * File class for loading and accessing a text file.
  * Loads the whole file in memory for maximum performance.
  */
 class File {
     private:
-        vector<string*> _lines;
+        std::vector<std::string*> _lines;
 
     public:
 
@@ -21,7 +18,7 @@ class File {
         * Constructor. Loads the file.
         * @throws   runtime_exception if invalid path
         */
-        File (const string& path);
+        File (const std::string& path);
 
        /**
         * Destructor. Clears file from memory.
@@ -39,7 +36,7 @@ class File {
         * @return        const pointer to the requested line
         * @throws        range_error if index out of range.
         */
-        const string* get_line (unsigned int index) const;
+        const std::string* get_line (unsigned int index) const;
 };
 
 #endif
