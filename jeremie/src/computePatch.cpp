@@ -1,5 +1,4 @@
 #include "solver.hpp"
-
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
@@ -7,30 +6,40 @@
 
 using namespace std;
 
+
 int main (int argc, char **argv) {
     try {
-        if (argc < 3)
-            throw runtime_error(" usage : exec <originalFile> <patchedFile>");
-        
-        time_t beg =  time(NULL);
+        if (argc < 3) {
+            cerr << "Usage : " << argv[0] << " <originalFile> <patchedFile>"
+                 << endl;
+
+            return EXIT_FAILURE;
+        }
+
+        const time_t START = time(NULL);
         Solver solver(argv[1], argv[2]);
-        
+
         cerr << "Calcul des couts..." << endl;
-        
+
         solver.compute_costs(true);
-        cerr << "Calcul termine !\n";
+
+        cerr << "Calcul termine !" << endl;
         cerr << "Cout total : " << solver.get_min_cost() << endl;
-        
-        //solver.display();
-        
-        cerr << "\nEcriture du patch..." << endl;
+
+        // solver.display();
+
+        cerr << endl << "Ecriture du patch..." << endl;
+
         solver.display_solution();
-        cerr << "Ecriture terminee !\n\n";
-        cerr << "Duree totale : moins de " << time(NULL) - beg + 1
-                                           << " secondes !\n" << endl;
+
+        cerr << "Ecriture terminee !" << endl << endl;
+        cerr << "Duree totale : " << time(NULL) - START
+        	 << " secondes !" << endl << endl;
+
+        return EXIT_SUCCESS;
     }
     catch (const std::exception &excep) {
-        cerr << "\nErreur : " << excep.what() << "\n" << endl;
+        cerr << endl << "Erreur : " << excep.what() << endl << endl;
         return EXIT_FAILURE;
     }
 }
