@@ -2,10 +2,21 @@ CC=gcc
 CXX=g++
 LATEXC=pdflatex
 DOCC=doxygen
-# CFLAGS=-g -Wall
-CFLAGS= -Wall -Wextra -O3
-# CXXFLAGS= -Wall -Wextra -pedantic -ansi -Weffc++ -g
-CXXFLAGS= -Wall -Wextra -pedantic -ansi -Werror -O3
+DEBUG=0
+
+CFLAGS= -Wall
+CXXFLAGS= -Wall -Wextra -ansi -Werror
+
+ifeq ($(DEBUG), 1)
+	CFLAGS += -g
+	# CXXFLAGS += -DPAPI -g
+	CXXFLAGS += -DPAPI -O3
+	LDFLAGS= -lpapi
+else
+	CFLAGS += -DNDEBUG -Wextra -O3
+	CXXFLAGS += -O3
+endif
+
 
 REFDIR=.
 SRCDIR=$(REFDIR)/src
@@ -16,7 +27,7 @@ REPORTDIR=$(REFDIR)/rapport
 LATEXSOURCE=$(wildcard $(REPORTDIR)/*.tex)
 CSOURCE=$(wildcard $(SRCDIR)/applyPatch.c)
 CPPSOURCES=$(wildcard $(SRCDIR)/*.cpp)
-COMPUTEPATCH=$(SRCDIR)/computePatch.cpp $(SRCDIR)/file.cpp $(SRCDIR)/solver.cpp
+COMPUTEPATCH=$(SRCDIR)/computePatchOpt.cpp $(SRCDIR)/file.cpp $(SRCDIR)/solver.cpp
 PDF=$(LATEXSOURCE:.tex=.pdf)
 
 
@@ -27,7 +38,7 @@ $(BINDIR)/applyPatch: $(CSOURCE)
 	$(CC) $(CFLAGS)  $^ -o $@
 
 $(BINDIR)/computePatchOpt: $(COMPUTEPATCH)
-	$(CXX) $(CXXFLAGS) $^ -o $@
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o $@
 
 $(BINDIR)/patchCost: $(SRCDIR)/patchCost.cpp $(SRCDIR)/file.cpp $(SRCDIR)/file.hpp
 	$(CXX) $(CXXFLAGS) $^ -o $@
@@ -49,12 +60,13 @@ clean:
 	if [ -d "$(DOCDIR)/search" ]; then	rmdir --ignore-fail-on-non-empty $(DOCDIR)/search;	fi
 	rm -f $(DOCDIR)/* $(BINDIR)/* $(REPORTDIR)/*.{aux,log} $(REPORTDIR)/rapport.pdf
 
-
+run:
+	./bin/computePatchOpt benchmark/benchmark_06/{source,target}
 
 test: all
-	cd $(TESTDIR) ; ../$(BINDIR)/computePatch source target > patch
-#	cd $(TESTDIR) ; valgrind --tool=cachegrind ../$(BINDIR)/computePatch source target > patch
-#	cd $(TESTDIR) ; valgrind --leak-check=full ../$(BINDIR)/computePatch source target > patch
+	cd $(TESTDIR) ; ../$(BINDIR)/computePatchOpt source target > patch
+#	cd $(TESTDIR) ; valgrind --tool=cachegrind ../$(BINDIR)/computePatchOpt source target > patch
+#	cd $(TESTDIR) ; valgrind --leak-check=full ../$(BINDIR)/computePatchOpt source target > patch
 	cd $(TESTDIR) ; ../$(BINDIR)/applyPatch patch source > target2
 	cd $(TESTDIR) ; diff target target2
 	rm -f $(TESTDIR)/target2
