@@ -4,22 +4,31 @@
 #include <vector>
 #include <string>
 
+using namespace std;
+
+
 /**
- * Class used for loading and accessing a file.
- * It loads the whole file in the memory
+ * File class for loading and accessing a text file.
+ * Loads the whole file in memory for maximum performance.
  */
 class File {
     private:
-        std::vector<std::string*> _lines;
-    
+        vector<string*> _lines;
+
     public:
+
        /**
-        * Constructor. Loaads the file.
+        * Constructor. Loads the file.
         * @throws   runtime_exception if invalid path
         */
-        File (const std::string &path);
+        File (const string& path);
+
+       /**
+        * Destructor. Clears file from memory.
+        * @throws   runtime_exception if invalid path
+        */
         ~File ();
-        
+
         unsigned int nb_lines () const;
         
        /**
@@ -30,7 +39,7 @@ class File {
         * @return        const pointer to the requested line
         * @throws        range_error if index out of range.
         */
-        std::string const* get_line (unsigned int index) const;
+        const string* get_line (unsigned int index) const;
 };
 
 #endif

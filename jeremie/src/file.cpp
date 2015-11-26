@@ -1,9 +1,9 @@
 #include "file.hpp"
-
 #include <fstream>
 #include <stdexcept>
 
 using namespace std;
+
 
 File::File (const string &path):
     _lines(0, NULL)
@@ -31,7 +31,7 @@ unsigned int File::nb_lines () const {
     return _lines.size();
 }
 
-std::string const* File::get_line (unsigned int index) const {
+const string* File::get_line (unsigned int index) const {
     if (index == 0 || index > nb_lines())
         throw std::range_error ("Out of range index : " + index);
     
