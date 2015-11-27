@@ -49,7 +49,7 @@ $(BINDIR)/patchCost: $(SRCDIR)/patchCost.cpp $(SRCDIR)/file.cpp $(SRCDIR)/file.h
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 %.pdf: $(LATEXSOURCE)
-	$(LATEXC) -output-directory $(REPORTDIR) $^ 
+	cd $(REPORTDIR); $(LATEXC) rapport.tex; cd ..;
 
 $(DOCDIR)/index.html: $(SRCDIR)/Doxyfile $(CSOURCE) 
 	$(DOCC) $(SRCDIR)/Doxyfile
