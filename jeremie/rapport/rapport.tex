@@ -28,12 +28,12 @@ Dans toute la suite nous noterons $N$ le nombre de lignes du fichier d'entrée e
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Principe de notre  programme}
-Nous avons choisi le C++ car nous voulions obtenir de bonnes performances
+Nous avons choisi le C\texttt{++} car nous voulions obtenir de bonnes performances
 et que nous avons jugé un langage orienté objet bien adapté au problème.\\
 
-Nous avons écrit la classe File pour accéder aux fichiers d'entrée et de sortie. Pour limiter les défauts de cache et éviter des accès au disque moins fréquents, nous les chargeons entièrement en mémoire.\\
+Nous avons écrit la classe \texttt{File} pour accéder aux fichiers d'entrée et de sortie. Pour limiter les défauts de cache et éviter des accès au disque moins fréquents, nous les chargeons entièrement en mémoire.\\
 
-Pour le calcul du patch optimal, nous avons créé la classe Solver.
+Pour le calcul du patch optimal, nous avons créé la classe \texttt{Solver}.
 Cette classe résout l'équation de Bellman de manière itérative.
 
 On crée un tableau d'états de taille $(M+1)\times(N+1)$.
@@ -54,7 +54,7 @@ et on le met à jour à chaque incrémentation de $i$ (cela évite de parcourir 
 
 Quand la matrice des états est remplie, pour écrire le patch optimal on part de l'état $(i_{max}, j_{max})$
 et on remonte la suite des instructions effectuées pour retrouver l'état $(0,0)$.
-On stocke ces opérations dans une liste, que l'on parcourt encore pour écrire le patch final.
+On stocke ces opérations dans une liste, que l'on parcourt à nouveau afin d'écrire le patch final.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Analyse du coût théorique}
