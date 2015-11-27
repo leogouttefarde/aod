@@ -1,3 +1,7 @@
+/*! \file applyPatch.c
+ *  \brief	   Classe utilisée pour calculer le patch optimal.
+ */
+
 #include "solver.hpp"
 #include <iostream>
 #include <list>

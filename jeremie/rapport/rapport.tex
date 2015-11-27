@@ -17,78 +17,96 @@
 
 \title{Rapport de TP 4MMAOD : Génération de patch optimal}
 \author{
-GOUTTEFARDE Léo (groupe 5)
-\\ PIELLARD Jérémie (groupe 2)
+{\sc Gouttefarde} Léo (groupe 5)\\
+{\sc Piellard} Jérémie (groupe 2)
 }
-
 \begin{document}
 
 \maketitle
 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \paragraph{\em Préambule}
-% {\em \begin{itemize} 
-%    \item Compléter ce patron de rapport en supprimant toutes les phrases en italique\,: elles ne doivent pas apparaître dans le rapport pdf.
-%    \item Il sera attribué {\bf 1 point} pour la qualité globale du rapport\,: présentation, concision et clarté de l'argumentation.
-% \end{itemize}
-% }
+Dans toute la suite nous noterons $N$ le nombre de lignes du fichier d'entrée et $M$ celui du fichier de sortie.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Principe de notre  programme (1 point)}
-% {\em Mettre ici une explication brève du principe de votre programme en  précisant la méthode implantée (récursive, itérative) et les
-% choix effectués (notamment pour l'ordonnancement des instructions).
-% } 
+\section{Principe de notre  programme}
+Le programme est fait en C++ car nous voulions obtenir de bonnes performances
+et que nous jugions un langage orienté objet bien adapté au problème.\\
+
+Pour accéder rapidement aux fichiers d'entrée et de sortie, nous les stockons entièrement en mémoire.
+Nous avons créé une classe File pour le faire.\\
+
+Pour le calcul du patch optimal, nous avons créé la classe Solver.
+Cette classe résoud les équations de Bellman de manière itérative.
+
+On crée un tableau d'états de taille $(M+1)\times(N+1)$.
+Un état est représenté par un coût optimal et l'opération nécessaire pour arriver dans cet état
+(on peut en déduire l'état précédent), soit deux entiers.
+
+On commence par remplir les conditions aux bords
+(état $(0,j)$ accessible uniquement par $j$ additions,
+état $(i,0)$ accessible uniquement par destructions).
+
+Ensuite on calcule les autres coûts en parcourant la matrice par ligne
+(c'est-à-dire à $j$ constant).
+Le calcul du coût de l'addition, la substitution ou la destruction sont simples.
+Pour le coût de la multi-destruction, on retient l'indice le plus avantageux
+et on le met à jour à chaque incrémentation de $i$ (cela évite de parcourir une nouvelle fois toute la ligne).\\
+
+Quand la matrice des états est remplie, pour écrire le patch optimal on part de l'état $(i_{max}, j_{max})$
+et on remonte la suite des instructions effectuées pour retrouver l'état $(0,0)$.
+On stocke ces opérations dans une liste, que l'on parcourt encore pour écrire le patch final.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Analyse du coût théorique (3 points)}
-% {\em Donner ici l'analyse du coût théorique de votre programme en fonction des nombres $n_1$ et $n_2$ de lignes 
-% et $c_1$ et $c_2$ de caractères des deux fichiers en entrée.
-%  Pour chaque coût, donner la formule qui le caractérise (en justifiant brièvement pourquoi cette formule correspond à votre programme), 
-%  puis l'ordre du coût en fonction de $n_1, n_2, c_1, c_2$ en notation $\Theta$ de préférence, sinon $O$.}
+\section{Analyse du coût théorique}
 
   \subsection{Nombre  d'opérations en pire cas\,: }
-    \paragraph{Justification\,: }
-    % {\em La justification peut être par exemple de la forme: \\ 
-    %    "Le programme itératif contient les boucles $k_1=...$, $k_2= ...$ etc correspondant à la somme 
-    %   $$T(n_1, n_2, c_1, c_2) = \sum_{k_1=...}^{...} ... \sum ... + \sum_{i=...}^{...} ...$$ 
-    %   somme que nous avons calculée (ou majorée) par la technique de  ... " \\
-    %   ou  encore\,:  \\
-    %   "les appels récursifs du programme permettent de modéliser son coût par le système d'équations aux récurrences 
-    %   $$T(k_1, k_2) = ...  \mbox{~avec~les~conditions~initiales~....~} $$
-    %   Le coût indiqué est obtenu en résolvant ce système par la méthode de  .... "
-    % } 
+    Il est en $\Theta(NM)$.\\
+
+    \textbf{Justification\,:} Pour calculer les coûts, on parcourt exactement une fois le tableau the taille $((N+1)\times(M+1))$.
+    Le traitement de chaque case a un coût fixe car on teste systématiquement les 4 opérations possibles (sauf pour les cases $i=0$ ou $j=0$ qui ont un coût moindre).
+
+    Le coût de lecture des fichiers d'entrée et de sortie ($\Theta(N)$ et $\Theta(M)$ respectivement) sont négligeables.
+
+    Enfin le coût d'écriture du patch est en pire cas en $\Theta(M)$ puisque le patch est au plus constitué de $2M$ lignes.
+
   \subsection{Place mémoire requise\,: }
-    \paragraph{Justification\,: }
+    Il est en $\Theta(NM)$.\\
+
+    \textbf{Justification\,:} On stocke entièrement les deux fichiers en mémoire : coût $\Theta(N+M)$.
+
+    On a également besoin de stocker un tableau $(M+1)\times(N+1)$ : coût $(\Theta(NM)$).
+
+    Enfin pour l'écriture du patch on utilise temporairement une liste de taille maximale $N$ : coût $\Theta(N)$.
 
   \subsection{Nombre de défauts de cache sur le modèle CO\,: }
     \paragraph{Justification\,: }
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Compte rendu d'expérimentation (2 points)}
-  \subsection{Conditions expérimentaless}
-     % {\em Décrire les conditions permettant la reproductibilité des mesures: on demande la description
-     %  de la machine et la méthode utilisée pour mesurer le temps.
-     % }
+\section{Compte rendu d'expérimentation}
+  \subsection{Conditions expérimentales}
 
     \subsubsection{Description synthétique de la machine\,:} 
-      % {\em indiquer ici le  processeur et sa fréquence, la mémoire, le système d'exploitation. 
-      %  Préciser aussi si la machine était monopolisée pour un test, ou notamment si 
-      %  d'autres processus ou utilisateurs étaient en cours d'exécution. 
-      % } 
+
+    La machine utilisée pour notre test est une machine de la salle E203.
+    Cette machine a un processeur Intel Core i5 4 coeurs à 3,3 Ghz et 16 Go de mémoire RAM.
 
     \subsubsection{Méthode utilisée pour les mesures de temps\,: } 
-      % {\em préciser ici  comment les mesures de temps ont été effectuées (fonction appelée) et l'unité de temps; en particulier, 
-      %  préciser comment les 5 exécutions pour chaque test ont été faites (par exemple si le même test est fait 5 fois de suite, ou si les tests sont alternés entre
-      %  les mesures, ou exécutés en concurrence etc). 
-      % }
+
+    Le code a été compilé avec l'option -O3.
+    Les mesures sont effectuées dans le code C++ lui-même (et pas dans le Makefile).
+    Pour que ces mesures prennent en compte la désallocation mémoire, nous avons
+    alloué et désalloué manuellement une instance de notre solveur.
+
+    Nous avons fait alterné les tests pour faire les mesures pour éviter que
+    le système d'exploitation mette en cache les fichiers ce qui aurait faussé les temps d'exécution.
+    Cependant nous obtenons des mesures semblables en passant 5 fois le même test à la suite.
+
+    Les mesures sont en millisecondes.
+    Il faut noter que la machine offre une précision de mesure maximale de 20 ms.
 
   \subsection{Mesures expérimentales}
-    % {\em Compléter le tableau suivant par les temps d'exécution mesurés pour chacun des 6 benchmarks imposés
-    %           (temps minimum, maximum et moyen sur 5 exécutions)
-    % }
 
-    \begin{figure}[h]
+    \begin{figure}[h!]
       \begin{center}
         \begin{tabular}{|l||r||r|r|r||}
           \hline
@@ -97,17 +115,17 @@ GOUTTEFARDE Léo (groupe 5)
             & du patch     & min       & max     & moyen \\
           \hline
           \hline
-            benchmark1 &      &     &     &     \\
+            benchmark 1 & 2540 & 20 & 20 & 20 \\
           \hline
-            benchmark2 &      &     &     &     \\
+            benchmark 2 & 3120 & 80 & 90 & 82 \\
           \hline
-            benchmark3 &      &     &     &     \\
+            benchmark 3 & 809 & 160 & 180 & 170 \\
           \hline
-            benchmark4 &      &     &     &     \\
+            benchmark 4 & 1708 & 350 & 370 & 360 \\
           \hline
-            benchmark5 &      &     &     &     \\
+            benchmark 5 & 7553 & 460 & 470 & 468 \\
           \hline
-            benchmark6 &      &     &     &     \\
+            benchmark 6 & 37027 & 2050 & 2070 & 2060 \\
           \hline
           \hline
         \end{tabular}
@@ -117,12 +135,32 @@ GOUTTEFARDE Léo (groupe 5)
     \end{figure}
 
 \subsection{Analyse des résultats expérimentaux}
-% {\em Donner  une réponse justifiée  à la question\,: 
-%               les  temps mesurés correspondent ils  à votre analyse théorique (nombre d’opérations et défauts de cache) ?
-% }
+
+Voici ci-dessous le graphe du temps d'exécution divisé par $NM$ en fonction de $NM$.
+Nous avons créé nous même quelques patchs pour tester d'autres valeurs de $NM$ et compléter le graphe.
+On constate que le temps d'exécution est bien proportionnel à la quantité $NM$.
+
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[width=12cm]{exec.png}
+\caption{Temps d'exécution divisé par $NM$ en fonction de $NM$}
+\end{center}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Question\,: et  si le coût d'un patch était sa taille en octets ? (1 point)}
+\section{Question\,: et  si le coût d'un patch était sa taille en octets ?}
+    Dans le cas où le coût d'un patch est sa taille en octet,
+on peut garder le même programme en changeant simplement le coût des opérations.
+Les coûts deviennent:
+
+\begin{itemize}
+\item addition de la ligne j après la ligne k : $taille("+\ k\backslash n") + taille(ligne_j)$
+\item substitution de la ligne j par la ligne k : $taille("=\ k\backslash n") + taille(ligne_j)$
+\item suppression de la ligne i : $taille("d\ i\backslash n")$
+\item suppression de n lignes après la ligne i : $taille("D\ i\ j\backslash n")$
+\end{itemize}
+
 % {\em Préciser le principe de la résolution choisie (parmi celles vues en cours); donner  les modifications à apporter (soit à vos  équations, soit à votre programme, au choix) 
 % pour s'adapter à cette nouvelle fonction de coût. 
 % }

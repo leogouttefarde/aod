@@ -1,3 +1,7 @@
+/*! \file applyPatch.c
+ *  \brief	   Calcule le coût d'un patch.
+ */
+
 #include "file.hpp"
 #include <iostream>
 #include <string>

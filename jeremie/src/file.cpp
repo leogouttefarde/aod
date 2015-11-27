@@ -1,3 +1,7 @@
+/*! \file applyPatch.c
+ *  \brief	   Classe utilisée pour stocker et parcourir un fichier.
+ */
+
 #include "file.hpp"
 
 #include <fstream>

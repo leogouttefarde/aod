@@ -1,3 +1,7 @@
+/*! \file applyPatch.c
+ *  \brief	   Calcule le patch optimal.
+ */
+
 #include "solver.hpp"
 #include <iostream>
 #include <cstdlib>
@@ -18,8 +22,6 @@ int main (int argc, char **argv) {
             throw runtime_error ("Usage : " + string(argv[0])
                                             + " <originalFile> <patchedFile>");
 
-        const clock_t start = clock();
-
         #ifdef PAPI
         long long counters[3];
         int PAPI_events[] = {
@@ -32,24 +34,24 @@ int main (int argc, char **argv) {
         (void)i;
         #endif
 
-        Solver solver(argv[1], argv[2]);
+        const clock_t start = clock();
+
+        /* allocation dynamique pour avoir la durée totale
+         * (sans oublier la désallocation mémoire) */
+        Solver *solver = new Solver(argv[1], argv[2]);
 
         cerr << "Calcul des couts..." << endl;
-
-        solver.compute_costs(true);
-
+        solver->compute_costs(true);
         cerr << "Calcul termine !" << endl;
-        cerr << "Cout total : " << solver.get_min_cost() << endl;
+        cerr << "Cout total : " << solver->get_min_cost() << endl;
 
         cerr << endl << "Ecriture du patch..." << endl;
-
-        solver.display_solution();
-
-        const clock_t end = clock();
-        const clock_t diff = end - start;
-
+        solver->display_solution();
         cerr << "Ecriture terminee !" << endl << endl;
-        
+
+        delete solver;
+
+        const clock_t diff = clock() - start;
         cerr << "Duree totale : " << (diff * 1000) / CLOCKS_PER_SEC
              << " millisecondes !" << endl;
 
