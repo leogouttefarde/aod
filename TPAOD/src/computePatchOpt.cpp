@@ -8,6 +8,15 @@
  * \copyright GNU Public License.
  *
  * This is the computePatchOpt main program, which computes an optimal patch.
+ *
+ *
+ * \mainpage Documentation du TP AOD
+ *
+ * Documentation du TP AOD de génération de patch optimal.
+ *
+ * Pour lire la documentation, parcourir les différentes classes ou fichiers
+ * dans l'arborescence ou faire une recherche.
+ *
  */
 
 #include "solver.hpp"
