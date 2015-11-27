@@ -22,7 +22,7 @@ else
 endif
 
 
-REFDIR=.
+REFDIR=TPAOD
 SRCDIR=$(REFDIR)/src
 BINDIR=$(REFDIR)/bin
 DOCDIR=$(REFDIR)/doc
@@ -30,7 +30,6 @@ REPORTDIR=$(REFDIR)/rapport
 TESTDIR=$(REFDIR)/test
 
 LATEXSOURCE=$(wildcard $(REPORTDIR)/*.tex)
-TEXFILES=$(LATEXSOURCE:$(REPORTDIR)/%=%)
 CSOURCE=$(wildcard $(SRCDIR)/applyPatch.c)
 CPPSOURCES=$(wildcard $(SRCDIR)/*.cpp)
 COMPUTEPATCH=$(SRCDIR)/computePatchOpt.cpp $(SRCDIR)/file.cpp $(SRCDIR)/solver.cpp
@@ -50,10 +49,10 @@ $(BINDIR)/patchCost: $(SRCDIR)/patchCost.cpp $(SRCDIR)/file.cpp $(SRCDIR)/file.h
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 %.pdf: $(LATEXSOURCE)
-	cd $(REPORTDIR); $(LATEXC) $(TEXFILES); cd ..;
+	cd $(REPORTDIR); $(LATEXC) $(LATEXSOURCE:$(REPORTDIR)/%=%); cd ..;
 
-$(DOCDIR)/index.html: $(SRCDIR)/Doxyfile $(CSOURCE) 
-	$(DOCC) $(SRCDIR)/Doxyfile
+$(DOCDIR)/index.html: $(SRCDIR)/Doxyfile $(CSOURCE) $(CPPSOURCES)
+	cd $(REFDIR); $(DOCC) $(SRCDIR:$(REFDIR)/%=%)/Doxyfile; cd ..;
 
 binary: $(BINDIR)/applyPatch $(BINDIR)/computePatchOpt $(BINDIR)/patchCost
 
@@ -64,7 +63,7 @@ doc: $(DOCDIR)/index.html
 clean:
 	rm -f $(DOCDIR)/search/*
 	if [ -d "$(DOCDIR)/search" ]; then	rmdir --ignore-fail-on-non-empty $(DOCDIR)/search;	fi
-	rm -f $(DOCDIR)/* $(BINDIR)/* $(REPORTDIR)/*.{aux,log} $(REPORTDIR)/rapport.pdf
+	rm -f $(DOCDIR)/* $(BINDIR)/* $(REPORTDIR)/*.{aux,log}
 
 run: binary
 	$(BINDIR)/computePatchOpt benchmark/benchmark_06/{source,target}
