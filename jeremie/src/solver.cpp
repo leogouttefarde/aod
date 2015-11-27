@@ -94,7 +94,7 @@ void Solver::compute_costs (bool disp) {
 }
 
 void Solver::compute_line (int j) {
-    int best_k;//utilisé pour la multidestruction
+    int best_k = 0;//utilisé pour la multidestruction
     
     string const *tar_j = _target.get_line(j);
     for (unsigned int i = 1 ; i <= _source.nb_lines() ; ++i) {

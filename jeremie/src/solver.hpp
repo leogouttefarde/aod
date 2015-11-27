@@ -6,8 +6,6 @@
 #include <vector>
 #include <string>
 
-using namespace std;
-
 /* enumeration qui represente une operation (les operations seront des int)
  * si op > DEST, alors l'operation est la destruction de (op - DEST) lignes
  * en particulier, op - DEST == 1  =>  destruction simple */
@@ -47,7 +45,7 @@ class Solver {
         * Constructor. Load the two files in memory.
         * @throws runtime_error if one of two paths is invalid.
         */
-        Solver (const string &src_path, const string &tar_path);
+        Solver (const std::string &src_path, const std::string &tar_path);
 
        /**
         * Computes every cost. This method should be called first.
