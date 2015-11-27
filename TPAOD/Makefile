@@ -22,7 +22,7 @@ else
 endif
 
 
-REFDIR=TPAOD
+REFDIR=.
 SRCDIR=$(REFDIR)/src
 BINDIR=$(REFDIR)/bin
 DOCDIR=$(REFDIR)/doc
