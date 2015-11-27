@@ -28,22 +28,23 @@ Dans toute la suite nous noterons $N$ le nombre de lignes du fichier d'entrée e
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Principe de notre  programme}
-Le programme est fait en C++ car nous voulions obtenir de bonnes performances
-et que nous jugions un langage orienté objet bien adapté au problème.\\
+Nous avons choisi le C++ car nous voulions obtenir de bonnes performances
+et que nous avons jugé un langage orienté objet bien adapté au problème.\\
 
-Pour accéder rapidement aux fichiers d'entrée et de sortie, nous les stockons entièrement en mémoire.
-Nous avons créé une classe File pour le faire.\\
+Nous avons écrit la classe File pour accéder aux fichiers d'entrée et de sortie. Pour limiter les défauts de cache et éviter des accès au disque moins fréquents, nous les chargeons entièrement en mémoire.\\
 
 Pour le calcul du patch optimal, nous avons créé la classe Solver.
-Cette classe résoud les équations de Bellman de manière itérative.
+Cette classe résout l'équation de Bellman de manière itérative.
 
 On crée un tableau d'états de taille $(M+1)\times(N+1)$.
-Un état est représenté par un coût optimal et l'opération nécessaire pour arriver dans cet état
+Un état est représenté par la donnée d'un coût optimal et de l'opération nécessaire pour arriver dans cet état
 (on peut en déduire l'état précédent), soit deux entiers.
 
-On commence par remplir les conditions aux bords
-(état $(0,j)$ accessible uniquement par $j$ additions,
-état $(i,0)$ accessible uniquement par destructions).
+On commence par remplir les conditions aux bords :
+\begin{itemize}
+\item état $(0,j)$ accessible uniquement par $j$ additions;
+\item état $(i,0)$ accessible uniquement par destructions.
+\end{itemize}
 
 Ensuite on calcule les autres coûts en parcourant la matrice par ligne
 (c'est-à-dire à $j$ constant).
@@ -78,7 +79,9 @@ On stocke ces opérations dans une liste, que l'on parcourt encore pour écrire 
     Enfin pour l'écriture du patch on utilise temporairement une liste de taille maximale $N$ : coût $\Theta(N)$.
 
   \subsection{Nombre de défauts de cache sur le modèle CO\,: }
-    \paragraph{Justification\,: }
+  	Le nombre de défauts de cache est en $\Theta \left (\frac{NM}{L} \right )$, où $L$ est la longueur d'une ligne de cache et en supposant $2N < L$.\\
+  	
+     \textbf{Justification\,:} On parcours itérativement un tableau de taille $NM$. Cependant on accède à deux lignes adjacentes en même temps (pour tester l'addition notamment). En supposant $2N < L$, cela n'a pas d'influence sur les défauts de cache.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
