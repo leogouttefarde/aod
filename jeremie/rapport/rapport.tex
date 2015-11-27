@@ -24,7 +24,7 @@
 
 \maketitle
 
-On rappelle que l'on note $n_1$ ($n_2$) et $c_1$ ($c_2$) le nombre de lignes et caractères du fichier source (fichier cible).
+On rappelle que l'on note $n_1$ (respectivement $n_2$) et $c_1$ (respectivement $c_2$) le nombre de lignes et caractères du fichier source (respectivement cible).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Principe de notre  programme}
@@ -79,9 +79,9 @@ On stocke ces opérations dans une liste, que l'on parcourt à nouveau afin d'é
     Enfin pour l'écriture du patch on utilise temporairement une liste de taille maximale $n_1 + n_2$ : coût $\Theta(n_1 + n_2) = o(n_1n_2)$.
 
   \subsection{Nombre de défauts de cache sur le modèle CO\,: }
-  	Le nombre de défauts de cache est en $\Theta \left (\frac{n_1n_2}{L} \right )$, où $L$ est la longueur d'une ligne de cache, et en supposant $2n_1 < L$.\\
+  	Le nombre de défauts de cache est en $\Theta \left (\frac{n_1n_2}{L} \right )$, où $L$ est la longueur d'une ligne de cache et en supposant $2 \, n_1 < L$.\\
   	
-     \textbf{Justification\,:} On parcours itérativement un tableau de taille $n_1n_2$. Cependant on accède à deux lignes adjacentes en même temps (pour tester l'addition notamment). En supposant $2n_1 < L$, cela n'a pas d'influence sur les défauts de cache.
+     \textbf{Justification\,:} On parcourt itérativement un tableau de taille $n_1n_2$. Cependant on accède à deux lignes adjacentes en même temps (pour tester l'addition notamment). En supposant $2 \, n_1 < L$, cela n'a pas d'influence sur les défauts de cache.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -96,12 +96,12 @@ On stocke ces opérations dans une liste, que l'on parcourt à nouveau afin d'é
     \subsubsection{Méthode utilisée pour les mesures de temps\,: } 
 
     Le code a été compilé avec l'option -O3.
-    Les mesures sont effectuées dans le code C++ lui-même (et pas dans le Makefile).
+    Les mesures sont effectuées directement au sein du code C\texttt{++} (et pas dans le Makefile).
     Pour que ces mesures prennent en compte la désallocation mémoire, nous avons
     alloué et désalloué manuellement une instance de notre solveur.
 
-    Nous avons fait alterné les tests pour faire les mesures pour éviter que
-    le système d'exploitation mette en cache les fichiers ce qui aurait faussé les temps d'exécution.
+    Nous avons alterné les tests en effectuant les mesures pour éviter que
+    le système d'exploitation mette en cache les fichiers, ce qui aurait faussé les temps d'exécution.
     Cependant nous obtenons des mesures semblables en passant 5 fois le même test à la suite.
 
     Les mesures sont en millisecondes.
@@ -155,14 +155,15 @@ On constate que le temps d'exécution est bien proportionnel à la quantité $n_
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Question\,: et  si le coût d'un patch était sa taille en octets ?}
     Dans le cas où le coût d'un patch est sa taille en octet,
-on peut garder le même programme en changeant simplement le coût des opérations.
-Les coûts deviennent:
+on peut garder le même programme en changeant simplement le coût des opérations.\\
+
+\noindent Les coûts deviennent alors :
 
 \begin{itemize}
-\item addition de la ligne j après la ligne k : $taille("+\ k\backslash n") + taille(ligne_j)$
-\item substitution de la ligne j par la ligne k : $taille("=\ k\backslash n") + taille(ligne_j)$
-\item suppression de la ligne i : $taille("d\ i\backslash n")$
-\item suppression de n lignes après la ligne i : $taille("D\ i\ j\backslash n")$
+\item Addition de la ligne j après la ligne k : $taille("+\ k\backslash n") + taille(ligne_j)$
+\item Substitution de la ligne k par la ligne j : $taille("=\ k\backslash n") + taille(ligne_j)$
+\item Suppression de la ligne i : $taille("d\ i\backslash n")$
+\item Suppression de k lignes après la ligne i : $taille("D\ i\ k\backslash n")$
 \end{itemize}
 
 % {\em Préciser le principe de la résolution choisie (parmi celles vues en cours); donner  les modifications à apporter (soit à vos  équations, soit à votre programme, au choix) 
