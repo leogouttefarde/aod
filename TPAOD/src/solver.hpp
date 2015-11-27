@@ -7,9 +7,9 @@
 #include <string>
 
 /**
- * Enumeration qui represente une operation (les operations seront des int).
- * Si op > DEST, alors l'operation est la destruction de (op - DEST) lignes.
- * En particulier, op - DEST == 1  =>  destruction simple.
+ * Enumeration representing an operation (inner type is an int).
+ * If op > DEST, then the operation is the destruction of (op - DEST) lines.
+ * Particularly, op - DEST == 1  =>  simple destruction.
  */
 typedef enum Op_ {
     NONE = 0,
@@ -19,7 +19,7 @@ typedef enum Op_ {
 } Op;
 
 /**
- * structure utilisée pour représenter un etat
+ * Structure used for position state representation
  */
 struct State {
     int cost; // cout optimal pour arriver a cet etat
@@ -33,8 +33,8 @@ struct State {
 
 /**
  * Class used for computing an optimal patch.
- * If source file has I lines et target file has J lines,
- * stores a I*J vector of State.
+ * If source file has I lines & target file has J lines,
+ * stores an I x J vector of State.
  */
 class Solver {
 
@@ -46,8 +46,10 @@ class Solver {
     public:
 
        /**
-        * Constructor. Load the two files in memory.
+        * Constructor. Loads the two files in memory.
         * @throws runtime_error if one of two paths is invalid.
+        * @param    src_path    Source path
+        * @param    tar_path    Target path
         */
         Solver (const std::string &src_path, const std::string &tar_path);
 
@@ -56,8 +58,10 @@ class Solver {
         * @param disp   Whether or not a progression indcator is shown.
         */
         void compute_costs (bool disp=false);
-        
-        //for debugging purposes
+
+       /**
+        * Debug function
+        */
         void display () const;
         
        /**
@@ -67,35 +71,45 @@ class Solver {
         void display_solution ();
         
        /**
-        * Gives the cost of theoptimal patch.
-        * compute_costs() must have been called first
+        * Gives the cost of the optimal patch.
+        * \warning  compute_costs() must have been called first
         */
         int get_min_cost () const;
-        
+
     private:
-        
+
        /**
         * Since the grid is stored in a 1D array, makes the conversion
-        * from 2D coords to 1D coord.
+        * from 2D coordinates to 1D coordinates.
+        *
+        * @param    x   X coordinate
+        * @param    y   Y coordinate
         */
-        inline int index (int i, int j) const {
-            return j*(_source.nb_lines()+1) + i;
+        inline int index (int x, int y) const {
+            return y * (_source.nb_lines()+1) + x;
         }
-        
+
        /**
-        * Gives the minimal cost for a certain state/
+        * Gives the minimal cost for a certain state.
+        *
+        * @param    x   X coordinate
+        * @param    y   Y coordinate
         */
-        inline int get_cost (int i, int j) const {
-             return _states[index(i,j)].cost;
+        inline int get_cost (int x, int y) const {
+             return _states[index(x,y)].cost;
         }
-        
+
         /**
          * Computes states on the sides.
          */
         void compute_sides ();
-        
+
+       /**
+        * Computes a given line.
+        * @param    j   The line
+        */
         void compute_line (int j);
-        
+
        /**
         * Computes the next coordinates, assuming we are in (i,j)
         * and we do the operation op.

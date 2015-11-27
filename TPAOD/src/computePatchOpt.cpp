@@ -1,5 +1,13 @@
-/*! \file computePatchOpt.cpp
- *  \brief	   Calcule le patch optimal.
+/*!
+ * \file      computePatchOpt.cpp
+ * \author    Jérémie Piellard
+ * \author    Léo Gouttefarde
+ * \date      November, 2015
+ * \brief     Implements the computePatchOpt program.
+ * \warning   Usage: computePatchOpt originalFile patchedFile
+ * \copyright GNU Public License.
+ *
+ * This is the computePatchOpt main program, which computes an optimal patch.
  */
 
 #include "solver.hpp"
@@ -15,7 +23,11 @@
 
 using namespace std;
 
-
+/*!
+ * \brief     Main program
+ * \param   argc    Number of arguments
+ * \param   argv    Arguments
+ */
 int main (int argc, char **argv) {
     try {
         if (argc < 3)
@@ -36,20 +48,25 @@ int main (int argc, char **argv) {
 
         const clock_t start = clock();
 
-        /* allocation dynamique pour avoir la durée totale
+        /* Allocation dynamique pour avoir la durée totale
          * (sans oublier la désallocation mémoire) */
         Solver *solver = new Solver(argv[1], argv[2]);
 
         cerr << "Calcul des couts..." << endl;
+
         solver->compute_costs(true);
+
         cerr << "Calcul termine !" << endl;
         cerr << "Cout total : " << solver->get_min_cost() << endl;
 
         cerr << endl << "Ecriture du patch..." << endl;
+
         solver->display_solution();
+
         cerr << "Ecriture terminee !" << endl << endl;
 
         delete solver;
+
 
         const clock_t diff = clock() - start;
         cerr << "Duree totale : " << (diff * 1000) / CLOCKS_PER_SEC

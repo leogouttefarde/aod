@@ -16,20 +16,24 @@ class File {
 
        /**
         * Constructor. Loads the file.
-        * @throws   runtime_exception if invalid path
+        * \param   path    Filepath
+        * @throws   runtime_exception on invalid path
         */
         File (const std::string& path);
 
        /**
         * Destructor. Clears file from memory.
-        * @throws   runtime_exception if invalid path
         */
         ~File ();
 
-        unsigned int nb_lines () const;
-        
        /**
-        * Method for accessing a line of the file.
+        * Indicates the number of lines.
+        * @return   Number of lines in the file
+        */
+        unsigned int nb_lines () const;
+
+       /**
+        * Method for accessing a line from the file.
         * Lines start at line 1.
         *
         * @param   index Line index. Must be >= 1 and <= nb_lines()

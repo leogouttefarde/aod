@@ -1,5 +1,12 @@
-/*! \file file.cpp
- *  \brief	   Classe utilisée pour stocker et parcourir un fichier.
+/*!
+ * \file      file.cpp
+ * \author    Jérémie Piellard
+ * \author    Léo Gouttefarde
+ * \date      November, 2015
+ * \brief     File handling class
+ * \copyright GNU Public License.
+ *
+ * This is the file handling class.
  */
 
 #include "file.hpp"
@@ -13,7 +20,7 @@ using namespace std;
 File::File (const string &path):
     _lines(0, NULL)
 {
-    /* First, open the file */
+    /* File opening */
     ifstream file (path.c_str());
     if (!file.is_open())
         throw std::invalid_argument("Impossible d'ouvrir : " + path);
