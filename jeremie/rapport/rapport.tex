@@ -33,6 +33,8 @@ et que nous avons jugé un langage orienté objet bien adapté au problème.\\
 
 Nous avons écrit la classe \texttt{File} pour accéder aux fichiers d'entrée et de sortie. Pour limiter les défauts de cache et éviter des accès au disque moins fréquents, nous les chargeons entièrement en mémoire.\\
 
+Aussi, afin de compter le nombre de défauts de cache et les réduire, nous avons notamment intégré la librairie \texttt{PAPI} au mode debug du programme.\\
+
 Pour le calcul du patch optimal, nous avons créé la classe \texttt{Solver}.
 Cette classe résout l'équation de Bellman de manière itérative.
 

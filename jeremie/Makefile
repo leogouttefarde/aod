@@ -67,18 +67,10 @@ clean:
 	rm -f $(DOCDIR)/* $(BINDIR)/* $(REPORTDIR)/*.{aux,log} $(REPORTDIR)/rapport.pdf
 
 run: binary
-	./bin/computePatchOpt benchmark/benchmark_06/{source,target}
+	$(BINDIR)/computePatchOpt benchmark/benchmark_06/{source,target}
 
 check:
-	./test/check.sh benchmark/benchmark_06/{source,target}
-
-test: binary
-	cd $(TESTDIR) ; ../$(BINDIR)/computePatchOpt source target > patch
-#	cd $(TESTDIR) ; valgrind --tool=cachegrind ../$(BINDIR)/computePatchOpt source target > patch
-#	cd $(TESTDIR) ; valgrind --leak-check=full ../$(BINDIR)/computePatchOpt source target > patch
-	cd $(TESTDIR) ; ../$(BINDIR)/applyPatch patch source > target2
-	cd $(TESTDIR) ; diff target target2
-	rm -f $(TESTDIR)/target2
+	$(SRCDIR)/check.sh benchmark/benchmark_06/{source,target}
 
 
 .PHONY: all doc binary report test check
