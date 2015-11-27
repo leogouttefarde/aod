@@ -24,8 +24,6 @@
 
 \maketitle
 
-Dans toute la suite nous noterons $N$ le nombre de lignes du fichier d'entrée et $M$ celui du fichier de sortie.
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Principe de notre  programme}
 Nous avons choisi le C\texttt{++} car nous voulions obtenir de bonnes performances
@@ -36,7 +34,7 @@ Nous avons écrit la classe \texttt{File} pour accéder aux fichiers d'entrée e
 Pour le calcul du patch optimal, nous avons créé la classe \texttt{Solver}.
 Cette classe résout l'équation de Bellman de manière itérative.
 
-On crée un tableau d'états de taille $(M+1)\times(N+1)$.
+On crée un tableau d'états de taille $(n_1+1)\times(n_2+1)$.
 Un état est représenté par la donnée d'un coût optimal et de l'opération nécessaire pour arriver dans cet état
 (on peut en déduire l'état précédent), soit deux entiers.
 
@@ -60,28 +58,28 @@ On stocke ces opérations dans une liste, que l'on parcourt à nouveau afin d'é
 \section{Analyse du coût théorique}
 
   \subsection{Nombre  d'opérations en pire cas\,: }
-    Il est en $\Theta(NM)$.\\
+    Il est en $\Theta(n_1 n_2)$.\\
 
-    \textbf{Justification\,:} Pour calculer les coûts, on parcourt exactement une fois le tableau the taille $((N+1)\times(M+1))$.
+    \textbf{Justification\,:} Pour calculer les coûts, on parcourt exactement une fois le tableau the taille $((n_1 +1)\times(n_2 +1))$.
     Le traitement de chaque case a un coût fixe car on teste systématiquement les 4 opérations possibles (sauf pour les cases $i=0$ ou $j=0$ qui ont un coût moindre).
 
-    Le coût de lecture des fichiers d'entrée et de sortie ($\Theta(N)$ et $\Theta(M)$ respectivement) sont négligeables.
+    Le coût de lecture des fichiers d'entrée et de sortie ($\Theta(n_1)$ et $\Theta(n_2)$ respectivement) sont négligeables.
 
-    Enfin le coût d'écriture du patch est en pire cas en $\Theta(M)$ puisque le patch est au plus constitué de $2M$ lignes.
+    Enfin le coût d'écriture du patch est en pire cas en $\Theta(n_2)$ puisque le patch est au plus constitué de $2n_2$ lignes.
 
   \subsection{Place mémoire requise\,: }
-    Il est en $\Theta(NM)$.\\
+    Il est en $\Theta(n_1 n_2)$.\\
 
-    \textbf{Justification\,:} On stocke entièrement les deux fichiers en mémoire : coût $\Theta(N+M)$.
+    \textbf{Justification\,:} On stocke entièrement les deux fichiers en mémoire : coût $\Theta(c_1 + c_2) = o(n_1n_2)$.
 
-    On a également besoin de stocker un tableau $(M+1)\times(N+1)$ : coût $(\Theta(NM)$).
+    On a également besoin de stocker un tableau $(n_1+1)\times(n_2+1)$ : coût $\Theta(n_1n_2)$.
 
-    Enfin pour l'écriture du patch on utilise temporairement une liste de taille maximale $N$ : coût $\Theta(N)$.
+    Enfin pour l'écriture du patch on utilise temporairement une liste de taille maximale $n_1 + n_2$ : coût $\Theta(n_1 + n_2) = o(n_1n_2)$.
 
   \subsection{Nombre de défauts de cache sur le modèle CO\,: }
-  	Le nombre de défauts de cache est en $\Theta \left (\frac{NM}{L} \right )$, où $L$ est la longueur d'une ligne de cache et en supposant $2N < L$.\\
+  	Le nombre de défauts de cache est en $\Theta \left (\frac{n_1n_2}{L} \right )$, où $L$ est la longueur d'une ligne de cache et en supposant $2n_1 < L$.\\
   	
-     \textbf{Justification\,:} On parcours itérativement un tableau de taille $NM$. Cependant on accède à deux lignes adjacentes en même temps (pour tester l'addition notamment). En supposant $2N < L$, cela n'a pas d'influence sur les défauts de cache.
+     \textbf{Justification\,:} On parcours itérativement un tableau de taille $n_1n_2$. Cependant on accède à deux lignes adjacentes en même temps (pour tester l'addition notamment). En supposant $2n_1 < L$, cela n'a pas d'influence sur les défauts de cache.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
