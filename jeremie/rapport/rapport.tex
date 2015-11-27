@@ -24,14 +24,14 @@
 
 \maketitle
 
-On rappelle qu'on note $n_1$ ($n_2$) et $c_1$ ($c_2$) le nombre de lignes et caractères du fichier source (fichier cible).
+On rappelle que l'on note $n_1$ ($n_2$) et $c_1$ ($c_2$) le nombre de lignes et caractères du fichier source (fichier cible).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Principe de notre  programme}
 Nous avons choisi le C\texttt{++} car nous voulions obtenir de bonnes performances
 et que nous avons jugé un langage orienté objet bien adapté au problème.\\
 
-Nous avons écrit la classe \texttt{File} pour accéder aux fichiers d'entrée et de sortie. Pour limiter les défauts de cache et éviter des accès au disque moins fréquents, nous les chargeons entièrement en mémoire.\\
+Nous avons écrit la classe \texttt{File} pour accéder aux fichiers d'entrée et de sortie. Pour limiter les défauts de cache et éviter des accès au disque trop fréquents, nous les chargeons entièrement en mémoire au début du programme.\\
 
 Pour le calcul du patch optimal, nous avons créé la classe \texttt{Solver}.
 Cette classe résout l'équation de Bellman de manière itérative.
@@ -50,7 +50,7 @@ Ensuite on calcule les autres coûts en parcourant la matrice par ligne
 (c'est-à-dire à $j$ constant).
 Le calcul du coût de l'addition, la substitution ou la destruction sont simples.
 Pour le coût de la multi-destruction, on retient l'indice le plus avantageux
-et on le met à jour à chaque incrémentation de $i$ (cela évite de parcourir une nouvelle fois toute la ligne).\\
+et on le met à jour à chaque incrémentation de $i$ : cela évite de parcourir une nouvelle fois toute la ligne.\\
 
 Quand la matrice des états est remplie, pour écrire le patch optimal on part de l'état $(i_{max}, j_{max})$
 et on remonte la suite des instructions effectuées pour retrouver l'état $(0,0)$.
@@ -62,7 +62,7 @@ On stocke ces opérations dans une liste, que l'on parcourt à nouveau afin d'é
   \subsection{Nombre  d'opérations en pire cas\,: }
     Il est en $\Theta(n_1 n_2)$.\\
 
-    \textbf{Justification\,:} Pour calculer les coûts, on parcourt exactement une fois le tableau the taille $((n_1 +1)\times(n_2 +1))$.
+    \textbf{Justification\,:} Pour calculer les coûts, on parcourt exactement une fois le tableau de taille $((n_1 +1)\times(n_2 +1))$.
     Le traitement de chaque case a un coût fixe car on teste systématiquement les 4 opérations possibles (sauf pour les cases $i=0$ ou $j=0$ qui ont un coût moindre).
 
     Le coût de lecture des fichiers d'entrée et de sortie ($\Theta(n_1)$ et $\Theta(n_2)$ respectivement) sont négligeables.
@@ -79,7 +79,7 @@ On stocke ces opérations dans une liste, que l'on parcourt à nouveau afin d'é
     Enfin pour l'écriture du patch on utilise temporairement une liste de taille maximale $n_1 + n_2$ : coût $\Theta(n_1 + n_2) = o(n_1n_2)$.
 
   \subsection{Nombre de défauts de cache sur le modèle CO\,: }
-  	Le nombre de défauts de cache est en $\Theta \left (\frac{n_1n_2}{L} \right )$, où $L$ est la longueur d'une ligne de cache et en supposant $2n_1 < L$.\\
+  	Le nombre de défauts de cache est en $\Theta \left (\frac{n_1n_2}{L} \right )$, où $L$ est la longueur d'une ligne de cache, et en supposant $2n_1 < L$.\\
   	
      \textbf{Justification\,:} On parcours itérativement un tableau de taille $n_1n_2$. Cependant on accède à deux lignes adjacentes en même temps (pour tester l'addition notamment). En supposant $2n_1 < L$, cela n'a pas d'influence sur les défauts de cache.
 
@@ -140,9 +140,9 @@ On stocke ces opérations dans une liste, que l'on parcourt à nouveau afin d'é
 \newpage
 \subsection{Analyse des résultats expérimentaux}
 
-Voici ci-dessous le graphe du temps d'exécution divisé par $n_1n_2$ en fonction de $n_1n_2$.
-Nous avons créé nous même quelques patchs pour tester d'autres valeurs de $n_1n_2$ et compléter le graphe.
-On constate que le temps d'exécution est bien proportionnel à la quantité $n_1n_2$.
+Voici ci-dessous le graphe du temps d'exécution divisé par $n_1^2$ en fonction de $n_1$ (on suppose $n_1 \approx n_2$).
+Nous avons créé nous même quelques patchs pour tester d'autres valeurs de $n_1$ et compléter le graphe.
+On constate que le temps d'exécution est bien proportionnel à la quantité $n_1^2$.
 
 
 \begin{figure}[h!]
