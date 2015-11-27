@@ -77,9 +77,9 @@ On stocke ces opérations dans une liste, que l'on parcourt à nouveau afin d'é
     Enfin pour l'écriture du patch on utilise temporairement une liste de taille maximale $n_1 + n_2$ : coût $\Theta(n_1 + n_2) = o(n_1n_2)$.
 
   \subsection{Nombre de défauts de cache sur le modèle CO\,: }
-  	Le nombre de défauts de cache est en $\Theta \left (\frac{n_1n_2}{L} \right )$, où $L$ est la longueur d'une ligne de cache et en supposant $2n_1 < L$.\\
+  	Le nombre de défauts de cache est en $\Theta \left (\frac{n_1n_2}{L} \right )$, où $L$ est la longueur d'une ligne de cache et en supposant $2 \, n_1 < L$.\\
   	
-     \textbf{Justification\,:} On parcours itérativement un tableau de taille $n_1n_2$. Cependant on accède à deux lignes adjacentes en même temps (pour tester l'addition notamment). En supposant $2n_1 < L$, cela n'a pas d'influence sur les défauts de cache.
+     \textbf{Justification\,:} On parcourt itérativement un tableau de taille $n_1n_2$. Cependant on accède à deux lignes adjacentes en même temps (pour tester l'addition notamment). En supposant $2 \, n_1 < L$, cela n'a pas d'influence sur les défauts de cache.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
