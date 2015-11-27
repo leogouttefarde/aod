@@ -19,8 +19,8 @@ using namespace std;
 
 
 /*!
- * \brief     Main program
- * \warning   Assumes the patch valid
+ * \brief  	Main program
+ * \warning	Assumes the patch is a valid one
  * \param   argc    Number of arguments
  * \param   argv    Arguments
  */

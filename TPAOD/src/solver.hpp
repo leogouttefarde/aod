@@ -1,3 +1,14 @@
+/*!
+ * \file      solver.hpp
+ * \author    Jérémie Piellard
+ * \author    Léo Gouttefarde
+ * \date      November, 2015
+ * \brief     Solver class
+ * \copyright GNU Public License.
+ *
+ * This is the Solver class.
+ */
+
 #ifndef SOLVER_HPP__
 #define SOLVER_HPP__
 

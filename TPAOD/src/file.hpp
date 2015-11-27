@@ -1,3 +1,14 @@
+/*!
+ * \file      file.hpp
+ * \author    Jérémie Piellard
+ * \author    Léo Gouttefarde
+ * \date      November, 2015
+ * \brief     File handling class
+ * \copyright GNU Public License.
+ *
+ * This is the file handling class.
+ */
+
 #ifndef FILE_HPP_
 #define FILE_HPP_
 

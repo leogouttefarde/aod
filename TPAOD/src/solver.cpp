@@ -1,5 +1,12 @@
-/*! \file solver.cpp
- *  \brief	   Classe utilisée pour calculer le patch optimal.
+/*!
+ * \file      solver.cpp
+ * \author    Jérémie Piellard
+ * \author    Léo Gouttefarde
+ * \date      November, 2015
+ * \brief     Solver class
+ * \copyright GNU Public License.
+ *
+ * This is the Solver class.
  */
 
 #include "solver.hpp"
