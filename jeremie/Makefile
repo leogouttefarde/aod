@@ -30,6 +30,7 @@ REPORTDIR=$(REFDIR)/rapport
 TESTDIR=$(REFDIR)/test
 
 LATEXSOURCE=$(wildcard $(REPORTDIR)/*.tex)
+TEXFILES=$(LATEXSOURCE:$(REPORTDIR)/%=%)
 CSOURCE=$(wildcard $(SRCDIR)/applyPatch.c)
 CPPSOURCES=$(wildcard $(SRCDIR)/*.cpp)
 COMPUTEPATCH=$(SRCDIR)/computePatchOpt.cpp $(SRCDIR)/file.cpp $(SRCDIR)/solver.cpp
@@ -49,7 +50,7 @@ $(BINDIR)/patchCost: $(SRCDIR)/patchCost.cpp $(SRCDIR)/file.cpp $(SRCDIR)/file.h
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 %.pdf: $(LATEXSOURCE)
-	cd $(REPORTDIR); $(LATEXC) rapport.tex; cd ..;
+	cd $(REPORTDIR); $(LATEXC) $(TEXFILES); cd ..;
 
 $(DOCDIR)/index.html: $(SRCDIR)/Doxyfile $(CSOURCE) 
 	$(DOCC) $(SRCDIR)/Doxyfile

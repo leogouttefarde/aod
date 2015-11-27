@@ -27,19 +27,17 @@
 Dans toute la suite nous noterons $N$ le nombre de lignes du fichier d'entrée et $M$ celui du fichier de sortie.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Principe de notre  programme}
-Le programme est fait en C++ car nous voulions obtenir de bonnes performances
-et que nous jugions un langage orienté objet bien adapté au problème.\\
+\section{Principe de notre programme}
+Notre programme \texttt{computePatchOpt} est réalisé en C\texttt{++} afin d'assurer les meilleures performances tout en profitant des nombreuses fonctionnalités d'un langage orienté objet.\\
 
-Pour accéder rapidement aux fichiers d'entrée et de sortie, nous les stockons entièrement en mémoire.
-Nous avons créé une classe File pour le faire.\\
+Afin d'accéder rapidement aux fichiers d'entrée et de sortie, nous les stockons entièrement en mémoire.
+Nous avons ainsi réalisé une classe \texttt{File} dédiée à cette tâche.\\
 
-Pour le calcul du patch optimal, nous avons créé la classe Solver.
+Pour le calcul du patch optimal, nous avons créé une classe \texttt{Solver}.
 Cette classe résoud les équations de Bellman de manière itérative.
 
 On crée un tableau d'états de taille $(M+1)\times(N+1)$.
-Un état est représenté par un coût optimal et l'opération nécessaire pour arriver dans cet état
-(on peut en déduire l'état précédent), soit deux entiers.
+Un état est représenté par un coût optimal et l'opération nécessaire pour y arriver (on peut en déduire l'état précédent), soit deux entiers.
 
 On commence par remplir les conditions aux bords
 (état $(0,j)$ accessible uniquement par $j$ additions,
@@ -53,7 +51,7 @@ et on le met à jour à chaque incrémentation de $i$ (cela évite de parcourir 
 
 Quand la matrice des états est remplie, pour écrire le patch optimal on part de l'état $(i_{max}, j_{max})$
 et on remonte la suite des instructions effectuées pour retrouver l'état $(0,0)$.
-On stocke ces opérations dans une liste, que l'on parcourt encore pour écrire le patch final.
+On stocke ces opérations dans une liste, que l'on parcourt à nouveau afin d'écrire le patch final.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Analyse du coût théorique}
