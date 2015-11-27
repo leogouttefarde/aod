@@ -1,4 +1,4 @@
-/*! \file applyPatch.c
+/*! \file patchCost.cpp
  *  \brief	   Calcule le coût d'un patch.
  */
 

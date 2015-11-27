@@ -1,4 +1,4 @@
-/*! \file applyPatch.c
+/*! \file solver.cpp
  *  \brief	   Classe utilisée pour calculer le patch optimal.
  */
 

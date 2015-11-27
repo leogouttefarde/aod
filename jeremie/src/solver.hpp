@@ -6,9 +6,11 @@
 #include <vector>
 #include <string>
 
-/* enumeration qui represente une operation (les operations seront des int)
- * si op > DEST, alors l'operation est la destruction de (op - DEST) lignes
- * en particulier, op - DEST == 1  =>  destruction simple */
+/**
+ * Enumeration qui represente une operation (les operations seront des int).
+ * Si op > DEST, alors l'operation est la destruction de (op - DEST) lignes.
+ * En particulier, op - DEST == 1  =>  destruction simple.
+ */
 typedef enum Op_ {
     NONE = 0,
     ADD,
@@ -16,7 +18,9 @@ typedef enum Op_ {
     DEST
 } Op;
 
-/* structure utilisée pour représenter un etat */
+/**
+ * structure utilisée pour représenter un etat
+ */
 struct State {
     int cost; // cout optimal pour arriver a cet etat
     Op  op;  /* operation a effectuer pour arriver ici,

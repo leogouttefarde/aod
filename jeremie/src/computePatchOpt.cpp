@@ -1,4 +1,4 @@
-/*! \file applyPatch.c
+/*! \file computePatchOpt.cpp
  *  \brief	   Calcule le patch optimal.
  */
 

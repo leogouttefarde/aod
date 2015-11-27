@@ -1,4 +1,4 @@
-/*! \file applyPatch.c
+/*! \file file.cpp
  *  \brief	   Classe utilisée pour stocker et parcourir un fichier.
  */
 
