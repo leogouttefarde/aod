@@ -96,12 +96,12 @@ On stocke ces opérations dans une liste, que l'on parcourt à nouveau afin d'é
     \subsubsection{Méthode utilisée pour les mesures de temps\,: } 
 
     Le code a été compilé avec l'option -O3.
-    Les mesures sont effectuées dans le code C++ lui-même (et pas dans le Makefile).
+    Les mesures sont effectuées directement au sein du code C\texttt{++} (et pas dans le Makefile).
     Pour que ces mesures prennent en compte la désallocation mémoire, nous avons
     alloué et désalloué manuellement une instance de notre solveur.
 
-    Nous avons fait alterné les tests pour faire les mesures pour éviter que
-    le système d'exploitation mette en cache les fichiers ce qui aurait faussé les temps d'exécution.
+    Nous avons alterné les tests en effectuant les mesures pour éviter que
+    le système d'exploitation mette en cache les fichiers, ce qui aurait faussé les temps d'exécution.
     Cependant nous obtenons des mesures semblables en passant 5 fois le même test à la suite.
 
     Les mesures sont en millisecondes.
@@ -155,14 +155,15 @@ On constate que le temps d'exécution est bien proportionnel à la quantité $n_
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Question\,: et  si le coût d'un patch était sa taille en octets ?}
     Dans le cas où le coût d'un patch est sa taille en octet,
-on peut garder le même programme en changeant simplement le coût des opérations.
-Les coûts deviennent:
+on peut garder le même programme en changeant simplement le coût des opérations.\\
+
+\noindent Les coûts deviennent alors :
 
 \begin{itemize}
-\item addition de la ligne j après la ligne k : $taille("+\ k\backslash n") + taille(ligne_j)$
-\item substitution de la ligne j par la ligne k : $taille("=\ k\backslash n") + taille(ligne_j)$
-\item suppression de la ligne i : $taille("d\ i\backslash n")$
-\item suppression de n lignes après la ligne i : $taille("D\ i\ j\backslash n")$
+\item Addition de la ligne j après la ligne k : $taille("+\ k\backslash n") + taille(ligne_j)$
+\item Substitution de la ligne k par la ligne j : $taille("=\ k\backslash n") + taille(ligne_j)$
+\item Suppression de la ligne i : $taille("d\ i\backslash n")$
+\item Suppression de k lignes après la ligne i : $taille("D\ i\ k\backslash n")$
 \end{itemize}
 
 % {\em Préciser le principe de la résolution choisie (parmi celles vues en cours); donner  les modifications à apporter (soit à vos  équations, soit à votre programme, au choix) 
