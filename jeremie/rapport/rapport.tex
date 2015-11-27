@@ -24,6 +24,8 @@
 
 \maketitle
 
+On rappelle qu'on note $n_1$ ($n_2$) et $c_1$ ($c_2$) le nombre de lignes et caractères du fichier source (fichier cible).
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Principe de notre  programme}
 Nous avons choisi le C\texttt{++} car nous voulions obtenir de bonnes performances
@@ -138,15 +140,15 @@ On stocke ces opérations dans une liste, que l'on parcourt à nouveau afin d'é
 \newpage
 \subsection{Analyse des résultats expérimentaux}
 
-Voici ci-dessous le graphe du temps d'exécution divisé par $NM$ en fonction de $NM$.
-Nous avons créé nous même quelques patchs pour tester d'autres valeurs de $NM$ et compléter le graphe.
-On constate que le temps d'exécution est bien proportionnel à la quantité $NM$.
+Voici ci-dessous le graphe du temps d'exécution divisé par $n_1n_2$ en fonction de $n_1n_2$.
+Nous avons créé nous même quelques patchs pour tester d'autres valeurs de $n_1n_2$ et compléter le graphe.
+On constate que le temps d'exécution est bien proportionnel à la quantité $n_1n_2$.
 
 
 \begin{figure}[h!]
 \begin{center}
 \includegraphics[width=12cm]{exec.png}
-\caption{Temps d'exécution divisé par $NM$ en fonction de $NM$}
+\caption{Temps d'exécution divisé par $n_1^2$ en fonction de $n_1$}
 \end{center}
 \end{figure}
 
